@@ -1,0 +1,9 @@
+{
+  "name": "VAR-ÃO - Árbitro de Vídeo e Highlights",
+  "description": "Aplicativo multi-câmeras para arbitragem de vídeo (VAR) e gravação de highlights de 40 segundos para vôlei e esportes amadores.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
