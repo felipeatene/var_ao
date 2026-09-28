@@ -61,9 +61,10 @@ export const CourtLayout: React.FC<CourtLayoutProps> = (props) => {
     setAccessibleDirections(false);
   };
   const hasChanges = Boolean(draft && (draft.name !== draft.initialName || draft.rotation !== draft.initialRotation));
+  const canSave = Boolean(hasChanges && draft?.name.trim());
   const save = () => {
-    if (!selected || !draft || !hasChanges) return;
-    const name = draft.name.trim() || draft.initialName;
+    if (!selected || !draft || !canSave) return;
+    const name = draft.name.trim();
     onUpdateCameraLabel(selected.id, name);
     onUpdateCameraRotation(selected.id, draft.rotation);
     onSaved?.('Câmera salva.');
@@ -246,7 +247,7 @@ export const CourtLayout: React.FC<CourtLayoutProps> = (props) => {
           {directions.map((direction, index) => <button key={direction.degrees} type="button" role="radio" aria-checked={draft.rotation === direction.degrees} aria-label={direction.label} className={`direction-grid-button ${draft.rotation === direction.degrees ? 'selected' : ''}`} onClick={() => setDraft(value => value ? { ...value, rotation: direction.degrees } : value)} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { event.preventDefault(); (event.currentTarget.parentElement?.children[(index + 1) % 8] as HTMLElement)?.focus(); } if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') { event.preventDefault(); (event.currentTarget.parentElement?.children[(index + 7) % 8] as HTMLElement)?.focus(); } }}><span aria-hidden="true">{directionGlyphs[index]}</span></button>)}
         </div> : <div className="direction-wheel" role="radiogroup" aria-label="Direção da câmera">
           <div className="direction-wheel-center" aria-hidden="true"><span>{directionByDegrees.get(draft.rotation)?.label ?? 'Atual'}</span></div>
-          {directions.map((direction, index) => <button key={direction.degrees} type="button" role="radio" aria-checked={draft.rotation === direction.degrees} aria-label={direction.label} title={direction.label} className={`direction-wheel-button direction-wheel-${index} ${draft.rotation === direction.degrees ? 'selected' : ''}`} onClick={() => setDraft(value => value ? { ...value, rotation: direction.degrees } : value)}><span aria-hidden="true">{directionGlyphs[index]}</span></button>)}
+          {directions.map((direction, index) => <button key={direction.degrees} type="button" role="radio" aria-checked={draft.rotation === direction.degrees} aria-label={direction.label} title={direction.label} className={`direction-wheel-button direction-wheel-${index} ${draft.rotation === direction.degrees ? 'selected' : ''}`} onClick={() => setDraft(value => value ? { ...value, rotation: direction.degrees } : value)} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { event.preventDefault(); (event.currentTarget.parentElement?.querySelectorAll('[role="radio"]')[(index + 1) % 8] as HTMLElement)?.focus(); } if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') { event.preventDefault(); (event.currentTarget.parentElement?.querySelectorAll('[role="radio"]')[(index + 7) % 8] as HTMLElement)?.focus(); } }}><span aria-hidden="true">{directionGlyphs[index]}</span></button>)}
         </div>}
       </fieldset>
       <div className="camera-popover-actions">
@@ -256,7 +257,7 @@ export const CourtLayout: React.FC<CourtLayoutProps> = (props) => {
         setSelectedId(null); setDraft(null);
         (next ? pins.current.get(next.id) : addButton.current)?.focus({ preventScroll: true });
       }}><Trash2 size={16} />Remover câmera</button>
-      <button className="camera-save" disabled={!hasChanges} onClick={save}><Check size={16} />Salvar</button>
+      <button className="camera-save" disabled={!canSave} onClick={save}><Check size={16} />Salvar</button>
       </div>
     </div>, document.body)}
   </div>;
