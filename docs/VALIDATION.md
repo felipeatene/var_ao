@@ -88,3 +88,15 @@ Verificar VoiceOver e TalkBack, ordem de leitura, nomes dos controles, foco de d
 ## Resultado para revisão
 
 O código e a documentação podem ser revisados via pull request. A validação física e a revisão nativa de acessibilidade continuam abertas e não devem ser marcadas como concluídas no merge ou na descrição do produto.
+
+## Atualização · pop-up de câmera
+
+O painel abaixo da quadra foi substituído por configuração ancorada ao marcador. Verificações no navegador: oito direções e rotação correspondente, preservação do ângulo inicial de 145°, edição do nome, arraste sem abertura, Escape com retorno do foco, troca de câmera, fechamento externo e remoção com foco na câmera restante. Geometria conferida em 390 × 844, 1280 × 900 e área reduzida de 320 × 480; o pop-up permanece dentro da área visível e não sobrepõe a ação fixa de revisão. Ampliação visual de 200% foi exercitada via emulação do navegador; isso não equivale a teste de ampliação de texto do sistema.
+
+Capturas: [celular](screenshots/camera-popup-mobile.png), [desktop](screenshots/camera-popup-desktop.png) e [ampliação](screenshots/camera-popup-zoom.png). O teclado virtual físico e leitores de tela não foram validados nesta atualização.
+
+Nesta atualização, `npm run lint` e `npm run build` passaram no checkout local (1.669 módulos; JavaScript de 293,16 kB, 91,61 kB gzip). A implementação Flutter não foi alterada.
+
+## Atualização · controle circular e salvar
+
+O pop-up agora inicia com controle circular, alterna para a rosa dos ventos acessível, mantém nome e direção em rascunho e só aplica mudanças ao pressionar **Salvar**. A validação manual cobriu estado inicial desabilitado, alteração de nome, alteração das oito direções, retorno ao valor original, salvar/fechar com foco no marcador, descarte por Escape e clique externo, além da mensagem “Câmera salva.”. Os testes foram realizados no navegador local em viewport móvel e desktop. VoiceOver, TalkBack e teclado virtual físico continuam pendentes.

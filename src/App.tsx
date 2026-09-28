@@ -191,6 +191,7 @@ export default function App() {
     setCameras((prev) =>
       prev.map((c) => (c.id === id ? { ...c, rotationDegrees } : c))
     );
+    showToast('Câmera salva.');
   };
 
   const handleUpdateCameraLabel = (id: string, label: string) => {

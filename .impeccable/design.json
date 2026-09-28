@@ -142,6 +142,11 @@
         "name": "mobile-review-action",
         "value": "0 6px 24px #17212b26",
         "purpose": "Ação fixa no rodapé móvel web."
+      },
+      {
+        "name": "camera-popover",
+        "value": "0 8px 28px #17212b2b",
+        "purpose": "Painel contextual não modal ancorado ao marcador de câmera web."
       }
     ],
     "motion": [
@@ -168,10 +173,19 @@
     "evidence": {
       "sources": [
         "src/index.css",
-        "apps/mobile/lib/main.dart"
+        "apps/mobile/lib/main.dart",
+        "src/components/CourtLayout.tsx"
       ],
       "status": "Extração estática; sem auditoria completa, comparação visual do painel ou teste físico nesta documentação.",
       "native": "Material 3 e transições Cupertino no iOS; os exemplos HTML representam o web."
+    },
+    "cameraConfiguration": {
+      "source": "src/components/CourtLayout.tsx e .camera-popover em src/index.css",
+      "appearance": "Painel de superfície branca, raio de 12 px, largura máxima de 312 px; campos de altura mínima 48 px e texto 16 px.",
+      "placement": "Portal fixo ancorado ao marcador; margem de viewport de 12 px, reposicionamento acima/abaixo, altura rolável e espaço reservado para a ação fixa de revisão.",
+      "controls": "Nome de até 40 caracteres, seletor nativo de oito direções com opção Atual para ângulos existentes intermediários, fechar e remover câmera; seta externa indica direção.",
+      "interaction": "Diálogo não modal. Foco inicial no painel; Escape e fechar devolvem foco ao marcador. Interação externa ou saída de foco fecham o painel. Arraste a partir de 6 px move sem abrir; setas movem o marcador.",
+      "validation": "Descrição conferida estaticamente com a implementação; teclado físico e VoiceOver permanecem pendentes."
     }
   },
   "components": [
