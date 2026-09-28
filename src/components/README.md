@@ -33,3 +33,7 @@ O pop-up abre em modo circular por padrão: oito setas orbitam um centro que ide
 Um deslocamento de pelo menos 6 px distingue arraste de toque. Arrastar move a câmera sem abrir sua configuração. As setas do teclado continuam movendo o marcador. Escape e o botão de fechar devolvem o foco à câmera; tocar fora, sair com Tab ou escolher outra câmera encerra a configuração anterior. A remoção permanece como ação secundária e direciona o foco a outra câmera ou ao botão de adicionar.
 
 O posicionamento acompanha rolagem, tamanho do conteúdo, redimensionamento e eventos de `visualViewport`, incluindo mudanças de área visível pelo teclado virtual. Em alturas extremas, o conteúdo do pop-up pode rolar internamente. Teste físico do teclado iOS/Android continua recomendado.
+
+### Alinhamento do seletor de direção
+
+O controle circular calcula a posição dos oito botões pelo próprio ângulo (0° direita, sentido horário), sem classes de posição duplicadas. Setas SVG da biblioteca Lucide compartilham traço e centro. Ambos os modos usam alvos de 48 px, foco itinerante, seleção por setas/Home/End e rótulo textual da orientação. O centro mostra a direção pendente; Salvar continua aplicando e fechando.

@@ -100,3 +100,7 @@ Nesta atualização, `npm run lint` e `npm run build` passaram no checkout local
 ## Atualização · controle circular e salvar
 
 O pop-up agora inicia com controle circular, alterna para a rosa dos ventos acessível, mantém nome e direção em rascunho e só aplica mudanças ao pressionar **Salvar**. A validação manual cobriu estado inicial desabilitado, alteração de nome, alteração das oito direções, retorno ao valor original, salvar/fechar com foco no marcador, descarte por Escape e clique externo, além da mensagem “Câmera salva.”. Os testes foram realizados no navegador local em viewport móvel e desktop. VoiceOver, TalkBack e teclado virtual físico continuam pendentes.
+
+### Correção do alinhamento das direções
+
+Removidas regras CSS conflitantes e setas tipográficas. Verificação visual no navegador em viewport móvel: oito opções separadas e alinhadas no círculo e na grade 3×3; seleção Cima → tecla direita seleciona Cima-direita e habilita Salvar. TypeScript aprovado. Leitor de tela físico permanece pendente.

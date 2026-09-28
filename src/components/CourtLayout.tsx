@@ -1,6 +1,6 @@
 import React, { useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Accessibility, Check, Plus, Trash2, X } from 'lucide-react';
+import { Accessibility, ArrowRight, Check, Plus, Trash2, X } from 'lucide-react';
 import { CameraDevice, SportType } from '../types';
 
 // Same convention as atan2 used when adding a camera: 0° right, clockwise.
@@ -15,7 +15,6 @@ const directions = [
   { label: 'Cima-esquerda', degrees: 225 },
 ];
 const directionByDegrees = new Map(directions.map(direction => [direction.degrees, direction]));
-const directionGlyphs = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'];
 const clampPosition = (value: number) => Math.max(6, Math.min(94, value));
 
 interface CourtLayoutProps {
@@ -235,20 +234,39 @@ export const CourtLayout: React.FC<CourtLayoutProps> = (props) => {
       <div className="camera-popover-heading">
         <h3 id={`${popupId}-title`}>Câmera {cameras.indexOf(selected) + 1}</h3>
         <div className="camera-popover-tools">
-          <button className="accessibility-toggle" type="button" aria-label={accessibleDirections ? 'Usar controle circular' : 'Usar seleção acessível'} title={accessibleDirections ? 'Usar controle circular' : 'Usar seleção acessível'} onClick={() => setAccessibleDirections(value => !value)}><Accessibility size={18} /></button>
+          <button className="accessibility-toggle" type="button" aria-label={accessibleDirections ? 'Usar controle circular' : 'Usar seleção acessível'} aria-pressed={accessibleDirections} title={accessibleDirections ? 'Usar controle circular' : 'Usar seleção acessível'} onClick={() => setAccessibleDirections(value => !value)}><Accessibility size={18} /></button>
           <button className="icon-button" aria-label="Fechar configuração" onClick={() => close()}><X size={20} /></button>
         </div>
       </div>
       <label>Nome da câmera
         <input aria-label="Nome da câmera" value={draft.name} onChange={event => setDraft(value => value ? { ...value, name: event.target.value } : value)} maxLength={40} />
       </label>
-      <fieldset className="direction-fieldset"><legend>Direção</legend>
-        {accessibleDirections ? <div className="direction-grid" role="radiogroup" aria-label="Direção da câmera">
-          {directions.map((direction, index) => <button key={direction.degrees} type="button" role="radio" aria-checked={draft.rotation === direction.degrees} aria-label={direction.label} className={`direction-grid-button ${draft.rotation === direction.degrees ? 'selected' : ''}`} onClick={() => setDraft(value => value ? { ...value, rotation: direction.degrees } : value)} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { event.preventDefault(); (event.currentTarget.parentElement?.children[(index + 1) % 8] as HTMLElement)?.focus(); } if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') { event.preventDefault(); (event.currentTarget.parentElement?.children[(index + 7) % 8] as HTMLElement)?.focus(); } }}><span aria-hidden="true">{directionGlyphs[index]}</span></button>)}
-        </div> : <div className="direction-wheel" role="radiogroup" aria-label="Direção da câmera">
-          <div className="direction-wheel-center" aria-hidden="true"><span>{directionByDegrees.get(draft.rotation)?.label ?? 'Atual'}</span></div>
-          {directions.map((direction, index) => <button key={direction.degrees} type="button" role="radio" aria-checked={draft.rotation === direction.degrees} aria-label={direction.label} title={direction.label} className={`direction-wheel-button direction-wheel-${index} ${draft.rotation === direction.degrees ? 'selected' : ''}`} onClick={() => setDraft(value => value ? { ...value, rotation: direction.degrees } : value)} onKeyDown={event => { if (event.key === 'ArrowRight' || event.key === 'ArrowDown') { event.preventDefault(); (event.currentTarget.parentElement?.querySelectorAll('[role="radio"]')[(index + 1) % 8] as HTMLElement)?.focus(); } if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') { event.preventDefault(); (event.currentTarget.parentElement?.querySelectorAll('[role="radio"]')[(index + 7) % 8] as HTMLElement)?.focus(); } }}><span aria-hidden="true">{directionGlyphs[index]}</span></button>)}
-        </div>}
+      <fieldset className="direction-fieldset"><legend>Para onde a câmera aponta?</legend>
+        <p className="direction-hint" id={`${popupId}-direction-help`}>Escolha a seta olhando para o mapa da quadra.</p>
+        <div className={accessibleDirections ? 'direction-grid' : 'direction-wheel'} role="radiogroup" aria-label="Direção da câmera" aria-describedby={`${popupId}-direction-help`}>
+          <div className="direction-center" aria-hidden="true"><ArrowRight size={26} style={{ transform: `rotate(${draft.rotation}deg)` }} /></div>
+          {directions.map((direction, index) => <button
+            key={direction.degrees} type="button" role="radio"
+            aria-checked={draft.rotation === direction.degrees} aria-label={direction.label}
+            tabIndex={index === Math.max(0, directions.findIndex(item => item.degrees === draft.rotation)) ? 0 : -1}
+            className={`direction-option ${draft.rotation === direction.degrees ? 'selected' : ''}`}
+            style={accessibleDirections ? { gridColumn: [2,3,3,3,2,1,1,1][index], gridRow: [1,1,2,3,3,3,2,1][index] } : {
+              left: `${50 + 37 * Math.cos(direction.degrees * Math.PI / 180)}%`,
+              top: `${50 + 37 * Math.sin(direction.degrees * Math.PI / 180)}%`,
+            }}
+            onClick={() => setDraft(value => value ? { ...value, rotation: direction.degrees } : value)}
+            onKeyDown={event => {
+              const step = ['ArrowRight', 'ArrowDown'].includes(event.key) ? 1 : ['ArrowLeft', 'ArrowUp'].includes(event.key) ? -1 : 0;
+              if (!step && event.key !== 'Home' && event.key !== 'End') return;
+              event.preventDefault();
+              const next = event.key === 'Home' ? 0 : event.key === 'End' ? 7 : (index + step + 8) % 8;
+              setDraft(value => value ? { ...value, rotation: directions[next].degrees } : value);
+              (event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[next])?.focus();
+            }}>
+            <ArrowRight size={24} strokeWidth={2} aria-hidden="true" style={{ transform: `rotate(${direction.degrees}deg)` }} />
+          </button>)}
+        </div>
+        <p className="direction-value" aria-live="polite">{directionByDegrees.get(draft.rotation)?.label ?? 'Orientação atual preservada'}</p>
       </fieldset>
       <div className="camera-popover-actions">
       <button className="camera-remove" onClick={() => {
