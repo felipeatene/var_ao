@@ -6,3 +6,12 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Design tooling runtime (keep approved images in docs/design)
+.impeccable/build/
+.impeccable/review/
+.impeccable/mocks/
+
+# Native generated caches and local build symlinks
+/apps/mobile/build
+**/.kotlin/

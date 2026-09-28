@@ -1,0 +1,28 @@
+name: outro_angulo
+description: "Replay local de vôlei com dois ângulos, para Android e iPhone."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.4
+
+dependencies:
+  camera: ^0.12.1
+  crypto: ^3.0.7
+  flutter:
+    sdk: flutter
+  mobile_scanner: ^7.4.2
+  path_provider: ^2.1.6
+  qr_flutter: ^4.1.0
+  video_player: ^2.14.0
+  wakelock_plus: ^1.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/court.png

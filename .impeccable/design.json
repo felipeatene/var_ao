@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-28T00:00:00-03:00",
+  "title": "Design System: Outro Ângulo",
+  "extensions": {
+    "colorMeta": {
+      "action": {
+        "role": "primary",
+        "displayName": "Azul de ação",
+        "tonalRamp": [
+          "oklch(15% 0.19 265)",
+          "oklch(26% 0.19 265)",
+          "oklch(37% 0.19 265)",
+          "oklch(49% 0.19 265)",
+          "oklch(61% 0.19 265)",
+          "oklch(73% 0.19 265)",
+          "oklch(85% 0.19 265)",
+          "oklch(95% 0.19 265)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Branco quente",
+        "tonalRamp": [
+          "oklch(15% 0.007 105)",
+          "oklch(26% 0.007 105)",
+          "oklch(37% 0.007 105)",
+          "oklch(49% 0.007 105)",
+          "oklch(61% 0.007 105)",
+          "oklch(73% 0.007 105)",
+          "oklch(85% 0.007 105)",
+          "oklch(95% 0.007 105)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Branco de superfície",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Grafite",
+        "tonalRamp": [
+          "oklch(15% 0.025 250)",
+          "oklch(26% 0.025 250)",
+          "oklch(37% 0.025 250)",
+          "oklch(49% 0.025 250)",
+          "oklch(61% 0.025 250)",
+          "oklch(73% 0.025 250)",
+          "oklch(85% 0.025 250)",
+          "oklch(95% 0.025 250)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Texto secundário",
+        "tonalRamp": [
+          "oklch(15% 0.024 250)",
+          "oklch(26% 0.024 250)",
+          "oklch(37% 0.024 250)",
+          "oklch(49% 0.024 250)",
+          "oklch(61% 0.024 250)",
+          "oklch(73% 0.024 250)",
+          "oklch(85% 0.024 250)",
+          "oklch(95% 0.024 250)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Divisória",
+        "tonalRamp": [
+          "oklch(15% 0.006 220)",
+          "oklch(26% 0.006 220)",
+          "oklch(37% 0.006 220)",
+          "oklch(49% 0.006 220)",
+          "oklch(61% 0.006 220)",
+          "oklch(73% 0.006 220)",
+          "oklch(85% 0.006 220)",
+          "oklch(95% 0.006 220)"
+        ]
+      },
+      "replay": {
+        "role": "neutral",
+        "displayName": "Fundo de replay",
+        "tonalRamp": [
+          "oklch(15% 0.014 250)",
+          "oklch(26% 0.014 250)",
+          "oklch(37% 0.014 250)",
+          "oklch(49% 0.014 250)",
+          "oklch(61% 0.014 250)",
+          "oklch(73% 0.014 250)",
+          "oklch(85% 0.014 250)",
+          "oklch(95% 0.014 250)"
+        ]
+      },
+      "replay-muted": {
+        "role": "neutral",
+        "displayName": "Texto secundário no replay",
+        "tonalRamp": [
+          "oklch(15% 0.021 250)",
+          "oklch(26% 0.021 250)",
+          "oklch(37% 0.021 250)",
+          "oklch(49% 0.021 250)",
+          "oklch(61% 0.021 250)",
+          "oklch(73% 0.021 250)",
+          "oklch(85% 0.021 250)",
+          "oklch(95% 0.021 250)"
+        ]
+      },
+      "error": {
+        "role": "secondary",
+        "displayName": "Erro",
+        "tonalRamp": [
+          "oklch(15% 0.18 30)",
+          "oklch(26% 0.18 30)",
+          "oklch(37% 0.18 30)",
+          "oklch(49% 0.18 30)",
+          "oklch(61% 0.18 30)",
+          "oklch(73% 0.18 30)",
+          "oklch(85% 0.18 30)",
+          "oklch(95% 0.18 30)"
+        ]
+      }
+    },
+    "tonalRampNote": "Rampas sintetizadas apenas para inspeção no painel; não são tokens implementados nem cores aprovadas para novos componentes.",
+    "shadows": [
+      {
+        "name": "toast",
+        "value": "0 6px 28px #0002",
+        "purpose": "Feedback temporário web."
+      },
+      {
+        "name": "mobile-review-action",
+        "value": "0 6px 24px #17212b26",
+        "purpose": "Ação fixa no rodapé móvel web."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button",
+        "value": "background-color .15s, color .15s",
+        "purpose": "Transição de botão; desativada em prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "620px"
+      },
+      {
+        "name": "compact",
+        "value": "800px"
+      },
+      {
+        "name": "wide",
+        "value": "1400px"
+      }
+    ],
+    "evidence": {
+      "sources": [
+        "src/index.css",
+        "apps/mobile/lib/main.dart"
+      ],
+      "status": "Extração estática; sem auditoria completa, comparação visual do painel ou teste físico nesta documentação.",
+      "native": "Material 3 e transições Cupertino no iOS; os exemplos HTML representam o web."
+    }
+  },
+  "components": [
+    {
+      "name": "Ação principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal do fluxo web; Flutter usa FilledButton com altura mínima equivalente.",
+      "html": "<button class=\"ds-primary\">Revisar lance</button>",
+      "css": ".ds-primary{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);background:var(--action,#2456d8);color:#fff;border:0;border-radius:var(--radius,12px);min-height:56px;padding:14px 20px;font-size:16px;font-weight:600;cursor:pointer;transition:background-color .15s}.ds-primary:hover{background:#1b45b5}.ds-primary:focus-visible{outline:3px solid #537ee6;outline-offset:4px}"
+    },
+    {
+      "name": "Ação secundária",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Alternativa subordinada à ação preenchida.",
+      "html": "<button class=\"ds-secondary\">Entrar como câmera</button>",
+      "css": ".ds-secondary{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);background:transparent;color:var(--action,#2456d8);border:1px solid #b5c5e9;border-radius:var(--radius,12px);min-height:56px;padding:14px 20px;font-size:16px;font-weight:600;cursor:pointer}.ds-secondary:hover{background:#e9effb}.ds-secondary:focus-visible{outline:3px solid #537ee6;outline-offset:4px}"
+    },
+    {
+      "name": "Navegação discreta",
+      "kind": "nav",
+      "refersTo": "button-quiet",
+      "description": "Navegação e utilidades de menor destaque.",
+      "html": "<nav aria-label=\"Navegação\"><button class=\"ds-quiet\">Voltar</button></nav>",
+      "css": ".ds-quiet{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);background:transparent;border:0;min-height:48px;padding:8px 12px;border-radius:8px;color:var(--muted,#56616d);font-size:14px;font-weight:550;cursor:pointer}.ds-quiet:hover{background:#e9ecec;color:var(--ink,#17212b)}.ds-quiet:focus-visible{outline:3px solid #537ee6;outline-offset:4px}"
+    },
+    {
+      "name": "Campo de câmera",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo observado nos ajustes da câmera web; o convite Flutter segue InputDecoration Material.",
+      "html": "<label class=\"ds-label\">Nome da câmera<input class=\"ds-input\" value=\"Câmera 1\"></label>",
+      "css": ".ds-label{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ink,#17212b)}.ds-input{font:inherit;min-height:48px;border:1px solid var(--line,#dadedf);border-radius:8px;padding:10px 12px;background:var(--surface,#fff);color:var(--ink,#17212b);caret-color:var(--action,#2456d8)}.ds-input:focus-visible{outline:3px solid #537ee6;outline-offset:4px}"
+    },
+    {
+      "name": "Estado do buffer",
+      "kind": "card",
+      "refersTo": "buffer-status",
+      "description": "Bloco tonal informativo observado no web; não é um controle interativo.",
+      "html": "<div class=\"ds-buffer\"><strong>Janela de revisão</strong><span>Disponibilidade depende da captura</span></div>",
+      "css": ".ds-buffer{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);background:#edeff0;border-radius:12px;padding:18px;color:var(--ink,#17212b);display:flex;flex-direction:column;gap:3px}.ds-buffer strong{font-size:16px}.ds-buffer span{font-size:13px;color:var(--muted,#56616d)}"
+    },
+    {
+      "name": "Seleção de modalidade",
+      "kind": "custom",
+      "refersTo": "segmented",
+      "description": "Estado selecionado usa superfície branca e texto azul; exemplo estático, sem lógica de troca.",
+      "html": "<div class=\"ds-segments\" role=\"group\" aria-label=\"Modalidade\"><button aria-pressed=\"true\">Quadra</button><button aria-pressed=\"false\">Praia</button></div>",
+      "css": ".ds-segments{display:flex;background:#e9eced;border-radius:12px;padding:4px;gap:4px}.ds-segments button{font-family:var(--font-sans,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);border:0;min-height:48px;flex:1;border-radius:8px;font-size:15px;font-weight:600;color:var(--muted,#56616d);background:transparent;cursor:pointer}.ds-segments button[aria-pressed=true]{background:#fff;color:var(--action,#2456d8)}.ds-segments button:focus-visible{outline:3px solid #537ee6;outline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Essencial",
+    "overview": "A direção A — Essencial, aprovada em docs/design/option-a.png, organiza Outro Ângulo em superfícies claras, texto grafite e ações azuis. A quadra orienta o posicionamento; o replay escuro concentra a atenção no vídeo. A personalidade é direta e tranquila, com poucos elementos competindo por atenção.",
+    "keyCharacteristics": [
+      "Superfícies claras e hierarquia legível.",
+      "Azul reservado a ações e seleção.",
+      "Quadra como orientação espacial e replay como área de atenção."
+    ],
+    "rules": [
+      {
+        "name": "The Ação Clara Rule",
+        "body": "Use o azul para a próxima ação e para a seleção; mantenha texto explicativo em grafite secundário.",
+        "section": "colors"
+      },
+      {
+        "name": "The Vídeo em Primeiro Plano Rule",
+        "body": "Reserve a superfície escura para captura e revisão; evite efeitos que disputem atenção com o lance.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preservar rótulos claros e estados textuais junto à cor.",
+      "Do manter alvos principais de pelo menos 48 unidades lógicas.",
+      "Do distinguir demonstração web e captura móvel ao apresentar o produto."
+    ],
+    "donts": [
+      "Don't usar a quadra como prova de calibração ou precisão.",
+      "Don't esconder lacunas ou tratar o buffer nominal como vídeo contínuo garantido.",
+      "Don't declarar auditoria de acessibilidade ou validação física ainda não realizadas."
+    ]
+  }
+}

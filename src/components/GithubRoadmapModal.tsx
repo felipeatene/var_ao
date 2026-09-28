@@ -6,9 +6,9 @@ interface GithubRoadmapModalProps {
   onClose: () => void;
 }
 
-const ROADMAP_MARKDOWN = `# 🏐 Projeto VAR-ÃO - Roadmap e Especificações
+const ROADMAP_MARKDOWN = `# 🏐 Projeto Outro Ângulo - Roadmap e Especificações
 
-O **VAR-ÃO** é um aplicativo mobile focado em democratizar a tecnologia de arbitragem de vídeo (VAR) para esportes amadores. Inspirado no sistema de "Jams" do Spotify, o app conecta múltiplos smartphones offline para atuarem como um sistema multi-câmeras de gravação de buffer contínuo (últimos 40 segundos).
+O **Outro Ângulo** é um aplicativo mobile focado em democratizar a tecnologia de arbitragem de vídeo (VAR) para esportes amadores. Inspirado no sistema de "Jams" do Spotify, o app conecta múltiplos smartphones offline para atuarem como um sistema multi-câmeras de gravação de buffer contínuo (últimos 40 segundos).
 
 ---
 
@@ -41,7 +41,7 @@ O **VAR-ÃO** é um aplicativo mobile focado em democratizar a tecnologia de arb
 ## 🗂 Fase 5: Ações de Jogo, Armazenamento e Monetização
 **Objetivo:** Separar as lógicas do VAR e dos Highlights, e aplicar regras de negócio.
 - [ ] **Lógica "Acionar VAR":** O vídeo recebido vai para o cache temporário, abre o player para revisão tática e é apagado em seguida.
-- [ ] **Lógica "Salvar Lance":** O vídeo recebido é salvo permanentemente na galeria (pasta "VAR-ÃO - Jogadas") do celular Mestre.
+- [ ] **Lógica "Salvar Lance":** O vídeo recebido é salvo permanentemente na galeria (pasta "Outro Ângulo - Jogadas") do celular Mestre.
 - [ ] **Controle Freemium (Armazenamento Local / Auth):** 
   - Limitar o "Salvar Lance" a 3 vezes por semana no plano Free.
   - Limitar o número de câmeras no Jam a 2 (Mestre + 1 Câmera) no plano Free.
@@ -92,7 +92,7 @@ export const GithubRoadmapModal: React.FC<GithubRoadmapModalProps> = ({ isOpen, 
           </div>
 
           <button
-            onClick={onClose}
+            onClick={onClose} aria-label="Fechar documentação"
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -158,7 +158,7 @@ export const GithubRoadmapModal: React.FC<GithubRoadmapModalProps> = ({ isOpen, 
             <div className="space-y-6">
               <div className="p-4 rounded-2xl bg-emerald-950/20 border border-emerald-500/30">
                 <h3 className="font-bold text-sm text-emerald-300 mb-1">
-                  🏐 Projeto VAR-ÃO - Visão Geral do Sistema
+                  🏐 Projeto Outro Ângulo - Visão Geral do Sistema
                 </h3>
                 <p className="text-gray-300 text-xs">
                   Inspirado no sistema de <em>"Jams"</em> do Spotify, o app conecta múltiplos
@@ -249,7 +249,7 @@ export const GithubRoadmapModal: React.FC<GithubRoadmapModalProps> = ({ isOpen, 
             Pronto para ser adicionado ao GitHub Projects ou README.md
           </span>
           <button
-            onClick={onClose}
+            onClick={onClose} aria-label="Fechar documentação"
             className="px-4 py-1.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold"
           >
             Fechar

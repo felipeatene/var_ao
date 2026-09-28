@@ -31,7 +31,7 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({
 
   const handleActivatePro = () => {
     onToggleTier('pro');
-    confetti({
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) confetti({
       particleCount: 100,
       spread: 80,
       origin: { y: 0.5 },
@@ -52,6 +52,7 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({
         <div className="relative px-6 py-6 bg-gradient-to-br from-amber-600/30 via-emerald-600/20 to-gray-950 border-b border-gray-800 text-center overflow-hidden">
           <button
             onClick={onClose}
+            aria-label="Fechar planos"
             className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800"
           >
             <X className="w-5 h-5" />
@@ -59,9 +60,9 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({
 
           <div className="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            VAR-ÃO PRO
+            Outro Ângulo PRO
           </div>
-          <h2 className="text-2xl font-black text-white">Eleve o nível do seu jogo</h2>
+          <h2 className="text-2xl font-black text-white">Experimente os planos</h2><p className="text-sm text-gray-300 mt-2">Simulação de limites. Nenhuma compra ou cobrança será realizada.</p>
           <p className="text-xs sm:text-sm text-gray-300 max-w-md mx-auto mt-1">
             Arbitragem de vídeo profissional e highlights sem limites para sua equipe ou quadra.
           </p>
@@ -122,7 +123,7 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({
                 className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-gray-950 font-black text-sm shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all"
               >
                 <Sparkles className="w-4 h-4 fill-current" />
-                <span>Assinar VAR-ÃO Pro (Simulação Imediata)</span>
+                <span>Assinar Outro Ângulo Pro (Simulação Imediata)</span>
               </button>
             ) : (
               <div className="flex flex-col gap-2">
@@ -139,6 +140,7 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({
                 </div>
                 <button
                   onClick={onClose}
+            aria-label="Fechar planos"
                   className="w-full py-3 rounded-2xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold text-xs"
                 >
                   Continuar usando Pro
@@ -149,6 +151,7 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({
             {!isPro && (
               <button
                 onClick={onClose}
+            aria-label="Fechar planos"
                 className="w-full py-2.5 text-xs text-gray-400 hover:text-gray-200 transition-colors"
               >
                 Continuar com o Plano Gratuito

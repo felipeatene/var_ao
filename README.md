@@ -1,130 +1,178 @@
-# 🏐 VAR-ÃO — Árbitro de Vídeo e Highlights para Esportes Amadores
+<p align="center">
+  <img src="docs/design/cover.svg" alt="Outro Ângulo — Reveja o jogo. De outro ponto de vista." width="100%" />
+</p>
 
-[![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/)
-[![Plataforma](https://img.shields.io/badge/plataforma-Flutter%20%7C%20Web%20React-blue.svg)](https://github.com/)
-[![Buffer](https://img.shields.io/badge/buffer-40s%20Circular-orange.svg)](https://github.com/)
-[![Rede](https://img.shields.io/badge/rede-Offline%20P2P%20%2F%20Hotspot-green.svg)](https://github.com/)
-[![Esporte](https://img.shields.io/badge/esportes-V%C3%B4lei%20de%20Quadra%20%26%20Praia-yellow.svg)](https://github.com/)
+<p align="center">
+  <a href="#-comece-pelo-web">Experimentar o web</a> ·
+  <a href="#-android-e-iphone">Executar no celular</a> ·
+  <a href="docs/VALIDATION.md">Validação e limites</a> ·
+  <a href="DESIGN.md">Design system</a>
+</p>
 
-> O **VAR-ÃO** democratiza a tecnologia de arbitragem de vídeo (VAR) e gravação de jogadas incríveis para esportes amadores. Inspirado no sistema de *"Jams"* do Spotify, o aplicativo conecta múltiplos smartphones em rede local (sem depender de internet) para funcionarem como um sistema multi-câmeras sincronizado com buffer circular contínuo dos últimos **40 segundos**.
+<p align="center">
+  <img alt="Estágio experimental" src="https://img.shields.io/badge/estágio-experimental-2456d8" />
+  <img alt="React e Flutter" src="https://img.shields.io/badge/interface-React%20%2B%20Flutter-17212b" />
+  <img alt="Janela de replay 40 segundos" src="https://img.shields.io/badge/replay-40%20segundos-2456d8" />
+</p>
 
----
+# 🏐 Outro Ângulo
 
-## 📑 Índice da Documentação do Projeto
+**Dois pontos de vista para rever o mesmo lance.** Outro Ângulo é o nome de trabalho do projeto anteriormente chamado **VAR-ÃO**: uma experiência de replay para jogadores amadores de vôlei de quadra e praia.
 
-Para facilitar a navegação e manutenção por módulos, cada diretório do código-fonte possui seu próprio `README.md` dedicado:
+O repositório reúne uma **demonstração web em React** e um **primeiro aplicativo Flutter para Android e iPhone**. A proposta nativa é usar dois celulares na mesma rede local, sem internet durante a partida. Ambos capturam vídeo; o organizador pausa a captura para revisar a janela recente e depois retoma o jogo.
 
-* [📘 `src/README.md`](./src/README.md) — Visão geral da arquitetura do frontend, gerenciamento de estado e fluxo de telas.
-* [🧩 `src/components/README.md`](./src/components/README.md) — Documentação aprofundada dos componentes de interface (Quadra interativa, VAR Player, Modo Câmera, Galeria de Lances, etc.).
-* [🏷️ `src/types/README.md`](./src/types/README.md) — Definição dos tipos TypeScript, entidades do domínio (câmeras, lances, vereditos e planos).
-* [⚙️ `src/utils/README.md`](./src/utils/README.md) — Motor gráfico em Canvas, simulação física da bola de vôlei, sincronia temporal NTP e HUD tático.
-
----
-
-## 🎯 1. Visão Geral e Conceito Central
-
-Em partidas amadoras de vôlei e esportes de quadra, lances cruciais (bolas na linha, toques sutis no bloqueio, toques na fita da rede ou invasões) geram discussões que interrompem o ritmo do jogo. Além disso, as melhores jogadas da partida geralmente são perdidas porque ninguém estava gravando no momento exato.
-
-O **VAR-ÃO** resolve esses dois problemas:
-1. **Arbitragem Imparcial (VAR Tático):** Ao acionar o botão do VAR, o sistema congela instantaneamente os últimos 40 segundos de todos os celulares vinculados à sessão e abre um player tático com *slow-motion*, zoom digital e avanço quadro a quadro para decidir o ponto.
-2. **Highlights Prontos para Redes Sociais:** O botão "Salvar Lance" exporta o mesmo buffer de 40s com multi-ângulos sincronizados direto para a galeria do smartphone do organizador, pronto para compartilhar no Instagram, TikTok ou WhatsApp.
+> **Estado do marco:** o código nativo foi implementado, mas a sessão completa entre Android e iPhone ainda requer validação física. A gravação segmentada pode deixar lacunas; não há garantia de captura contínua nem precisão de arbitragem. Consulte o [registro de validação](docs/VALIDATION.md).
 
 ---
 
-## 📡 2. Arquitetura de Rede Offline (O "Jam")
+## 📑 Navegue pela documentação
 
-Para garantir latência ultrabaixa e transferência de arquivos pesados sem custo de dados móveis ou oscilações de Wi-Fi de clubes:
+| Guia | O que você encontra |
+| :--- | :--- |
+| [Produto](PRODUCT.md) | Público, objetivos e limites do primeiro marco |
+| [Design system](DESIGN.md) | Identidade A — Essencial, tokens e padrões de interface |
+| [Frontend](src/README.md) | Organização React, telas e estado demonstrativo |
+| [Componentes](src/components/README.md) | Quadra, replay, webcam, galeria e diálogos |
+| [Tipos](src/types/README.md) | Modelos TypeScript e limites dos dados simulados |
+| [Utilitários](src/utils/README.md) | Renderização ilustrativa do lance em Canvas |
+| [Aplicativo mobile](apps/mobile/README.md) | Ambiente, instalação, captura e reprodução |
+| [Protocolo local](docs/PROTOCOL.md) | Convite, controle, relógios e transferência |
+| [Validação](docs/VALIDATION.md) | Verificações executadas e roteiro em aparelhos reais |
+| [Roadmap](ROADMAP.md) | Trabalho entregue e próximos passos |
 
-```
-┌────────────────────────────────────────────────────────┐
-│               CELULAR MESTRE (HOST DO JAM)             │
-│        Cria Hotspot Wi-Fi Local (ex: VAR-AO_5G)        │
-│          Servidor NTP Local + WebSocket Server         │
-└──────────────────────────┬─────────────────────────────┘
-                           │ Conexão P2P Local (Wi-Fi)
-         ┌─────────────────┼─────────────────┐
-         ▼                                   ▼
-┌──────────────────┐               ┌──────────────────┐
-│ CÂMERA 1 (REDE)  │               │ CÂMERA 2 (FUNDO) │
-│ Grava buffer 40s │               │ Grava buffer 40s │
-│ NTP sincronizado │               │ NTP sincronizado │
-└──────────────────┘               └──────────────────┘
-```
+## ✨ Uma interface mais simples
 
-* **Modo Hotspot P2P:** O celular Mestre gera a rede sem fio. As câmeras periféricas conectam-se pelo QR Code ou seleção de rede local.
-* **Sincronia de Tempo (NTP):** Todos os dispositivos sincronizam seus relógios internos com precisão de milissegundos ($\pm 0.4\text{ms}$).
-* **Buffer Circular:** Cada câmera grava pequenos fragmentos e descarta os mais antigos, retendo estritamente os últimos 40 segundos na memória do aparelho.
+A direção **A — Essencial** foi escolhida para substituir a estética tática escura e verde: fundo branco quente, texto grafite, ações em azul e replay escuro. O mapa da quadra ajuda a organizar os ângulos; os controles priorizam linguagem simples e leitura no celular.
 
----
+### Proposta visual aprovada
 
-## 🗺️ 3. Roadmap de Desenvolvimento (5 Fases para GitHub Projects)
+![Composição A — Essencial: propostas de início, partida com câmeras e revisão](docs/design/option-a.png)
 
-Abaixo está o planejamento completo para execução da versão nativa em Flutter:
+*Imagem conceitual gerada para aprovar a direção visual. Não é captura do aplicativo; textos e detalhes podem diferir da implementação. Os 40 segundos representam a janela de replay, não a duração máxima de uma partida.*
 
-### 🗂 Fase 1: Arquitetura Base e Setup do Projeto
-* [ ] Inicializar projeto Flutter e definir estrutura de pastas (MVVM ou Clean Architecture).
-* [ ] Configurar gerência de estado (Riverpod recomendado).
-* [ ] Adicionar dependências essenciais no `pubspec.yaml`: `camera` (para gravação contínua), `wifi_p2p` / pacote de Hotspot (rede local) e `gal` (para salvar na galeria).
-* [ ] Criar o esqueleto das telas principais (Rotas).
+A [alternativa B](docs/design/option-b.png) fica preservada como histórico da decisão.
 
-### 🗂 Fase 2: Interface (UX/UI) e Fluxo de Navegação
-* [ ] **Tela de Entrada (Home):** Opção para o usuário escolher se quer "Criar um Jam" (Celular Mestre) ou "Entrar em um Jam" (Câmera Periférica).
-* [ ] **Visão Mestre - Mapa da Quadra:** Criar o layout da quadra interativa onde o usuário define as posições das câmeras conectadas (Fundo Superior, Fundo Inferior, Rede Esquerda/Direita, Lateral).
-* [ ] **Visão Mestre - Painel de Controle:** Implementar os botões "Acionar VAR" (revisão rápida) e "Salvar Lance" (Highlights).
-* [ ] **Visão Câmera:** Tela de espera escura indicando a gravação em segundo plano e a posição escolhida.
+### Interface implementada · capturas reais do web
 
-### 🗂 Fase 3: Motor de Vídeo e Buffer Circular
-* [ ] Configurar o pacote de câmera para iniciar a gravação silenciosa em segundo plano.
-* [ ] Implementar a lógica do Buffer Circular: gravar em pequenos blocos de 10s e descartar arquivos antigos para reter apenas os últimos 40 segundos de vídeo.
-* [ ] Garantir que a qualidade do vídeo seja configurável (720p para o plano Free e 1080p para o Pro).
+<p align="center">
+  <img src="docs/screenshots/web-mobile.png" alt="Captura real do início do demonstrador web em tela estreita" width="300" />
+  <img src="docs/screenshots/web-replay.png" alt="Captura real do replay simulado em ambiente escuro" width="300" />
+</p>
 
-### 🗂 Fase 4: Comunicação de Rede (Offline) e Sincronização
-* [ ] **Descoberta Local:** Implementar a criação de Host (Hotspot) pelo Mestre e a conexão das Câmeras.
-* [ ] **Sincronia de Tempo (NTP):** Sincronizar o relógio interno (milissegundos) de todos os aparelhos no momento em que entram no "Jam".
-* [ ] **Gatilho e Transferência:** Quando o Mestre acionar o botão, enviar o *timestamp* exato pela rede local. As câmeras devem cortar o vídeo correspondente e transferir o arquivo (via WebSockets/HTTP local) para o Mestre.
+*Capturas do React em execução, em 28/09/2026. O vídeo mostrado é a animação demonstrativa. Não são capturas do Flutter nem evidência de pareamento entre celulares.*
 
-### 🗂 Fase 5: Ações de Jogo, Armazenamento e Monetização
-* [ ] **Lógica "Acionar VAR":** O vídeo recebido vai para o cache temporário, abre o player para revisão tática e é apagado em seguida.
-* [ ] **Lógica "Salvar Lance":** O vídeo recebido é salvo permanentemente na galeria (pasta "VAR-ÃO - Jogadas") do celular Mestre.
-* [ ] **Controle Freemium (Armazenamento Local / Auth):**
-  * Limitar o "Salvar Lance" a 3 vezes por semana no plano Free.
-  * Limitar o número de câmeras no Jam a 2 (Mestre + 1 Câmera) no plano Free.
-  * Criar paywall indicando o plano Pro (Câmeras e Lances ilimitados) por assinatura.
+## 🎯 O que funciona em cada plataforma
 
----
-
-## 💎 4. Modelo de Negócios (Freemium)
-
-| Funcionalidade | Plano Free (Gratuito) | Plano Pro (Aprox. R$ 9,00/mês) |
+| Capacidade | Web React | Flutter Android / iPhone |
 | :--- | :--- | :--- |
-| **Câmeras no Jam** | Mestre + 1 Câmera extra (Total 2) | Câmeras Ilimitadas |
-| **Uso do VAR** | Ilimitado | Ilimitado |
-| **Salvar Lance (Highlights)** | Limite de **3 lances por semana** | **Ilimitado** |
-| **Qualidade de Vídeo** | 720p (Padrão) | 1080p a 60fps (Alta definição) |
-| **Exportação** | Com marca d'água do aplicativo | Sem marca d'água / Vídeo limpo |
+| Início, modalidade e organização de câmeras | Demonstração interativa | Fluxo nativo implementado |
+| Câmera do aparelho | Prévia local da webcam | Captura local sem áudio |
+| Replay | Animação ilustrativa em Canvas | Reprodução de arquivos capturados e recebidos |
+| Dois aparelhos | Simulação; não pareia celulares | Convite QR/manual e comunicação local implementados |
+| Janela recente | Simulada | Buffer segmentado de aproximadamente 40 s |
+| Ângulos, reprodução lenta e zoom | Controles demonstrativos | Implementados, com ajuste temporal manual |
+| Galeria | Metadados e exportação de resumo `.txt` | Fora deste marco |
+| Planos e assinatura | Interface demonstrativa, sem cobrança | Fora deste marco |
 
----
+**Implementado não significa validado em aparelhos reais.** Os testes automatizados e as pendências estão separados em [VALIDATION.md](docs/VALIDATION.md).
 
-## 🚀 5. Executando o Protótipo Web Atual
+## 🚀 Comece pelo web
 
-O repositório contém uma aplicação completa construída em **React 19 + TypeScript + Vite + Tailwind CSS**, que simula o ecossistema com suporte à webcam real e feeds simulados táticos.
+Requer **Node.js 22.12 ou superior**. Use **npm**; o `package-lock.json` é a referência reproduzível de dependências.
 
-```bash
-# Instalar dependências
-npm install
-
-# Iniciar servidor de desenvolvimento (Porta 3000)
-npm run dev
-
-# Validar TypeScript e Lint
-npm run lint
-
-# Gerar build de produção
-npm run build
+```sh
+git clone https://github.com/felipeatene/var_ao.git
+cd var_ao
+# Enquanto o PR não estiver integrado:
+git switch codex/outro-angulo
+npm ci
+npm run dev -- --host 127.0.0.1
 ```
 
----
+Abra **http://127.0.0.1:3000**. Nenhuma chave de API é necessária. O `.env.example` documenta apenas configuração opcional; as variáveis antigas de Gemini e URL de aplicação não eram utilizadas e foram removidas.
 
-## 👥 Contribuição e Licença
+| Comando | Finalidade |
+| :--- | :--- |
+| `npm run dev -- --host 127.0.0.1` | Desenvolvimento local na porta 3000 |
+| `npm run lint` | Checagem TypeScript (`tsc --noEmit`), não ESLint |
+| `npm run build` | Build de produção em `dist/` |
+| `npm run preview -- --host 127.0.0.1` | Visualização do build de produção |
 
-Desenvolvido para revolucionar o esporte amador no Brasil. Sinta-se à vontade para abrir *Issues* ou enviar *Pull Requests* com base nas fases listadas acima.
+O antigo `bun.lock` foi substituído pelo lockfile npm. Dependências sem uso foram removidas, incluindo a dependência direta de esbuild que conflitava com o Vite 8.
+
+## 📱 Android e iPhone
+
+Ambiente de referência: **Flutter 3.47.5 / Dart 3.13.4**, Java 17 e ferramentas Android; macOS com Xcode e CocoaPods para iOS. As versões resolvidas dos plugins estão no `apps/mobile/pubspec.lock`.
+
+Instale Flutter e deixe seu executável no `PATH`, ou indique o caminho:
+
+```sh
+export FLUTTER_BIN=/caminho/para/flutter/bin/flutter
+./scripts/mobile.sh doctor -v
+./scripts/mobile.sh pub get
+./scripts/mobile.sh analyze
+./scripts/mobile.sh test
+./scripts/mobile.sh devices
+./scripts/mobile.sh run -d ID_DO_APARELHO
+```
+
+O wrapper também aceita ferramentas opcionais em `../.tooling/`, fora do repositório. Não é necessário criar essa pasta em outra máquina. Veja [ambiente e solução de problemas](apps/mobile/README.md).
+
+```sh
+# Android: APK de depuração
+./scripts/mobile.sh build apk --debug
+
+# iOS: aplicativo para simulador
+./scripts/mobile.sh build ios --simulator --debug
+
+# iOS: verificar compilação para dispositivo sem assinatura
+./scripts/mobile.sh build ios --debug --no-codesign
+```
+
+Para instalar em um iPhone real, configure sua equipe de desenvolvimento no Xcode, conecte o aparelho e habilite o modo de desenvolvedor. O build `--no-codesign` **não** é um aplicativo pronto para instalação no iPhone. SDKs, certificados e builds não fazem parte do Git.
+
+## 🎬 Da partida ao replay
+
+1. **Prepare a rede.** Conecte os dois celulares ao mesmo Wi-Fi ou hotspot criado manualmente. A rede deve permitir comunicação entre aparelhos.
+2. **Crie a partida.** No organizador, escolha quadra ou praia, toque em **Criar partida** e autorize câmera e rede local.
+3. **Adicione o segundo ângulo.** No outro aparelho, use **Entrar como câmera** e leia o QR ou cole o convite.
+4. **Confira o enquadramento.** Posicione ambos e inicie a captura pelo organizador. Mantenha os aplicativos abertos.
+5. **Revise o lance.** A ação pausa a captura e transfere os segmentos. Uma janela ainda incompleta aparece como tal.
+6. **Compare os ângulos.** Alterne a câmera, reduza a velocidade, amplie a imagem e ajuste o alinhamento temporal quando necessário.
+7. **Retome a partida.** A captura recomeça com um novo buffer. Ao encerrar a sessão, os arquivos temporários são removidos.
+
+## 📡 Arquitetura local
+
+```mermaid
+flowchart LR
+    A[Organizador · câmera 1] <-->|Controle WebSocket| B[Celular · câmera 2]
+    B -->|Segmentos via HTTP autenticado| A
+    A --> C[Replay local com dois ângulos]
+    A --- D[Buffer local de 40 s]
+    B --- E[Buffer local de 40 s]
+```
+
+Flutter cuida da interface e do estado; plugins integram câmera e reprodução nativas. O organizador mantém a sessão, e cada aparelho grava seus próprios arquivos. O convite contém endereço local e credencial temporária. A diferença entre relógios é estimada por amostras de ida e volta; a reprodução permite correção manual.
+
+Os segmentos pedidos são preservados durante a transferência, que suporta retomada por intervalo e verificação SHA-256. O protocolo usa HTTP/WebSocket autenticados **sem TLS**: utilize uma rede de confiança. Leia os detalhes em [PROTOCOL.md](docs/PROTOCOL.md).
+
+## 🧪 Limites e validação
+
+- Dois aparelhos; configuração solicitada de 720p/30 fps, sem áudio. O formato efetivo depende do hardware.
+- Segmentos de aproximadamente cinco segundos podem apresentar lacunas ao parar/iniciar a câmera. O player sinaliza intervalos sem vídeo.
+- A estimativa de relógio não mede atraso do sensor. Não há garantia de sincronia por quadro nem de ±0,4 ms.
+- Ao perder conexão ou enviar o aplicativo ao segundo plano, a captura é interrompida. Pode ser necessário iniciar uma nova sessão.
+- Não há criação automática de hotspot, captura com tela bloqueada, galeria nativa, cobrança ou publicação em lojas.
+- A webcam web não grava nem transmite para outros aparelhos. Dados de bateria, FPS e lances do demonstrador não são telemetria real.
+
+Consulte [testes e pendências](docs/VALIDATION.md) antes de utilizar o app em uma partida. Este marco experimental serve para avaliação e evolução do produto.
+
+## 🗺️ Evolução do projeto
+
+O [roadmap](ROADMAP.md) prioriza validação física entre plataformas, continuidade da captura e robustez da reconexão. Galeria nativa, monetização e distribuição em lojas exigem etapas próprias; as telas demonstrativas não representam serviços comerciais ativos.
+
+## 🤝 Contribuição
+
+Ao abrir uma issue, informe plataforma, modelo do aparelho, versão do sistema, tipo de rede e passos para reproduzir. Não publique convites de sessão, vídeos de terceiros ou credenciais. Em alterações, rode as verificações relevantes e atualize a documentação quando o comportamento mudar.
+
+Este repositório não declara uma licença de distribuição nesta entrega. Não presuma uma licença a partir da disponibilidade pública do código.

@@ -49,7 +49,7 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
     const element = document.createElement('a');
     const file = new Blob(
       [
-        `=== VAR-ÃO JOGADA EXPORTADA ===\nTítulo: ${item.title}\nData: ${item.timestamp}\nDuração: ${item.duration}s\nCâmeras Sincronizadas: ${item.camerasCount}\nResolução: ${item.resolution}\nMarca d'água: ${item.hasWatermark ? 'Ativa (Plano Free)' : 'Sem marca (Plano Pro)'}`,
+        `=== Outro Ângulo JOGADA EXPORTADA ===\nTítulo: ${item.title}\nData: ${item.timestamp}\nDuração: ${item.duration}s\nCâmeras Sincronizadas: ${item.camerasCount}\nResolução: ${item.resolution}\nMarca d'água: ${item.hasWatermark ? 'Ativa (Plano Free)' : 'Sem marca (Plano Pro)'}`,
       ],
       { type: 'text/plain' }
     );
@@ -58,6 +58,7 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+    URL.revokeObjectURL(element.href);
 
     setDownloadSuccess(item.id);
     setTimeout(() => setDownloadSuccess(null), 3000);
@@ -75,16 +76,16 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-gray-100 flex items-center gap-2">
-                Galeria: <span className="text-emerald-400">VAR-ÃO — Jogadas</span>
+                Galeria: <span className="text-emerald-400">Outro Ângulo — Jogadas</span>
               </h2>
               <p className="text-xs text-gray-400">
-                Clipes de 40 segundos salvos diretamente para redes sociais e revisão.
+                Jogadas simuladas. A exportação gera um resumo em texto, não um vídeo.
               </p>
             </div>
           </div>
 
           <button
-            onClick={onClose}
+            onClick={onClose} aria-label="Fechar galeria"
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -231,7 +232,7 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
         <div className="px-5 py-3 bg-gray-900 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400">
           <span>Armazenamento local da galeria do Mestre</span>
           <button
-            onClick={onClose}
+            onClick={onClose} aria-label="Fechar galeria"
             className="px-4 py-1.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold transition-colors"
           >
             Fechar Galeria
