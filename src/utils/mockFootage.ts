@@ -99,14 +99,14 @@ function drawTacticalHud(
   ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
   ctx.fillRect(width - pad - 120, pad, 120, 22);
   ctx.fillStyle = '#38bdf8';
-  ctx.fillText(`BUFFER: -${(40 - t).toFixed(1)}s`, width - pad - 112, pad + 15);
+  ctx.fillText(`REPLAY: -${(40 - t).toFixed(1)}s`, width - pad - 112, pad + 15);
 
   // Bottom watermark & status
   ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
   ctx.fillRect(0, height - 20, width, 20);
   ctx.fillStyle = '#9ca3af';
   ctx.font = '9px "JetBrains Mono", monospace';
-  ctx.fillText(`VAR-ÃO SYNC • NTP ±0.4ms • 60 FPS • ${timecode}`, pad, height - 7);
+  ctx.fillText(`DEMONSTRAÇÃO • ${timecode}`, pad, height - 7);
 
   if (isSlowMo) {
     ctx.fillStyle = '#ef4444';
@@ -309,7 +309,7 @@ function drawBaselineView(
     // Line call label
     ctx.fillStyle = '#22c55e';
     ctx.font = 'bold 11px "JetBrains Mono", monospace';
-    ctx.fillText('BOLA DENTRO (TOCANDO LINHA)', w * 0.45, baselineY + 28);
+    ctx.fillText('LANCE ILUSTRATIVO', w * 0.45, baselineY + 28);
   }
 }
 

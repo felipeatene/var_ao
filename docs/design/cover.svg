@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-labelledby="title desc">
+<title id="title">Outro Ângulo — Reveja o jogo.</title><desc id="desc">Marca azul em fundo branco quente. Dois enquadramentos representam dois pontos de vista.</desc>
+<rect width="1280" height="440" rx="24" fill="#f7f7f2"/>
+<g stroke="#2456d8" stroke-width="9" fill="none" stroke-linecap="square"><path d="M88 134V90h62M182 90h44v62"/><path d="M106 170v44h44M182 214h62v-62"/></g>
+<text x="292" y="149" font-family="Arial,Helvetica,sans-serif" font-size="68" font-weight="700" letter-spacing="-3" fill="#17212b">Outro Ângulo</text>
+<text x="294" y="203" font-family="Arial,Helvetica,sans-serif" font-size="28" fill="#56616d">Reveja o jogo. De outro ponto de vista.</text>
+<path d="M88 276h1104" stroke="#dce0df"/>
+<text x="88" y="337" font-family="Arial,Helvetica,sans-serif" font-size="23" fill="#17212b">Vôlei de quadra e praia</text>
+<text x="540" y="337" font-family="Arial,Helvetica,sans-serif" font-size="23" fill="#2456d8">Dois aparelhos · Uma rede local</text>
+<text x="88" y="383" font-family="Arial,Helvetica,sans-serif" font-size="18" fill="#56616d">React para demonstração · Flutter para Android e iPhone · Primeiro marco experimental</text>
+</svg>
