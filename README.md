@@ -98,6 +98,16 @@ Abra **http://127.0.0.1:3000**. Nenhuma chave de API é necessária. O `.env.exa
 | `npm run build` | Build de produção em `dist/` |
 | `npm run preview -- --host 127.0.0.1` | Visualização do build de produção |
 
+### CI, ambiente de teste e deploy automático
+
+O repositório possui workflows em `.github/workflows` para validar e publicar o web automaticamente no GitHub:
+
+- `CI` roda em `push`/`pull_request`/manual com:
+  - Web: `npm ci`, `npm run lint`, `npm run build`
+  - Mobile: `./scripts/mobile.sh pub get`, `./scripts/mobile.sh analyze`, `./scripts/mobile.sh test --no-pub`
+- `CI` também publica o artefato `web-dist` (pasta `dist/`) como ambiente de teste para validação do build gerado em cada execução.
+- `Deploy Web` roda no `push` da branch `main` (e manualmente) para publicar `dist/` no GitHub Pages.
+
 O antigo `bun.lock` foi substituído pelo lockfile npm. Dependências sem uso foram removidas, incluindo a dependência direta de esbuild que conflitava com o Vite 8.
 
 ## 📱 Android e iPhone
