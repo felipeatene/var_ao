@@ -104,3 +104,11 @@ O pop-up agora inicia com controle circular, alterna para a rosa dos ventos aces
 ### Correção do alinhamento das direções
 
 Removidas regras CSS conflitantes e setas tipográficas. Verificação visual no navegador em viewport móvel: oito opções separadas e alinhadas no círculo e na grade 3×3; seleção Cima → tecla direita seleciona Cima-direita e habilita Salvar. TypeScript aprovado. Leitor de tela físico permanece pendente.
+
+### Build Vite recuperado — 28/09/2026
+
+`npm run build` executado com código de saída 0 no próprio checkout: 1.669 módulos, 224 ms; gerados `dist/index.html`, CSS (47,09 kB) e JavaScript (295,87 kB).
+
+O processo estava bloqueado em operações de leitura/carregamento de arquivos do pacote transitivo `lightningcss@1.33.0` usado pelo Vite. A inspeção com `sample`, `lsof` e `ls -lO` identificou o binário nativo marcado `dataless` pelo iCloud e, depois, uma leitura bloqueada de `node/composeVisitors.js`. Os arquivos foram restaurados dos pacotes npm da mesma versão, por substituição atômica, e os processos antigos encerrados. Não houve alteração no lockfile, nas versões ou nas otimizações do build.
+
+Para evitar recorrência neste Mac, manter o checkout e suas dependências disponíveis localmente; preferir uma pasta de desenvolvimento fora da sincronização do iCloud. Em uma instalação nova, executar `npm ci` a partir do lockfile. Um processo sem saída não deve ser considerado erro de compilação sem inspecionar sua espera de I/O.
