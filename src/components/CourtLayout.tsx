@@ -1,3 +1,4 @@
+import { FREE_LIMITS } from '../utils/planLimits';
 import React, { useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Accessibility, ArrowRight, Check, Plus, Trash2, X } from 'lucide-react';
@@ -224,7 +225,7 @@ export const CourtLayout: React.FC<CourtLayoutProps> = (props) => {
     </div>
     <div className="court-toolbar"><p>Arraste os pontos para posicionar as câmeras.</p>
       <button ref={addButton} className="quiet-button" onClick={() => {
-        if (!isPro && cameras.length >= 2) { onOpenUpgradeModal(); return; }
+        if (!isPro && cameras.length >= FREE_LIMITS.cameras) { onOpenUpgradeModal(); return; }
         setPlacing(!placing);
       }}><Plus size={18} />{placing ? 'Cancelar' : 'Adicionar câmera'}</button>
     </div>

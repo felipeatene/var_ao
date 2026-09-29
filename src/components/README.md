@@ -37,3 +37,11 @@ O posicionamento acompanha rolagem, tamanho do conteúdo, redimensionamento e ev
 ### Alinhamento do seletor de direção
 
 O controle circular calcula a posição dos oito botões pelo próprio ângulo (0° direita, sentido horário), sem classes de posição duplicadas. Setas SVG da biblioteca Lucide compartilham traço e centro. Ambos os modos usam alvos de 48 px, foco itinerante, seleção por setas/Home/End e rótulo textual da orientação. O centro mostra a direção pendente; Salvar continua aplicando e fechando.
+
+## Planos e limites demonstrativos
+
+O CTA “Assinar Plano Pro — R$ 9,00/mês” ativa apenas a simulação: não há compra ou cobrança. Free permite duas câmeras e três salvamentos por semana (segunda a domingo no horário local). A cota é persistida neste navegador; exemplos não contam e excluir jogadas não devolve a cota. Salvamentos Pro também são contabilizados. Falha de armazenamento mantém a contagem em memória com aviso.
+
+Tentar exceder os limites, escolher 1080p ou remover a marca abre a oferta com o motivo, sem executar a ação. Fechar mantém Free; ativar Pro permite tentar novamente. A galeria exporta um resumo `.txt`; qualidade e marca são opções simuladas. Estas regras locais não constituem segurança comercial nem sincronizam entre dispositivos.
+
+Testes: `npm test`, `npm run lint` e `npm run build`.

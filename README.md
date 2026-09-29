@@ -176,3 +176,11 @@ O [roadmap](ROADMAP.md) prioriza validação física entre plataformas, continui
 Ao abrir uma issue, informe plataforma, modelo do aparelho, versão do sistema, tipo de rede e passos para reproduzir. Não publique convites de sessão, vídeos de terceiros ou credenciais. Em alterações, rode as verificações relevantes e atualize a documentação quando o comportamento mudar.
 
 Este repositório não declara uma licença de distribuição nesta entrega. Não presuma uma licença a partir da disponibilidade pública do código.
+
+## Planos e limites demonstrativos
+
+O CTA “Assinar Plano Pro — R$ 9,00/mês” ativa apenas a simulação: não há compra ou cobrança. Free permite duas câmeras e três salvamentos por semana (segunda a domingo no horário local). A cota é persistida neste navegador; exemplos não contam e excluir jogadas não devolve a cota. Salvamentos Pro também são contabilizados. Falha de armazenamento mantém a contagem em memória com aviso.
+
+Tentar exceder os limites, escolher 1080p ou remover a marca abre a oferta com o motivo, sem executar a ação. Fechar mantém Free; ativar Pro permite tentar novamente. A galeria exporta um resumo `.txt`; qualidade e marca são opções simuladas. Estas regras locais não constituem segurança comercial nem sincronizam entre dispositivos.
+
+Testes: `npm test`, `npm run lint` e `npm run build`.

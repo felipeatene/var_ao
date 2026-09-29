@@ -112,3 +112,12 @@ Removidas regras CSS conflitantes e setas tipográficas. Verificação visual no
 O processo estava bloqueado em operações de leitura/carregamento de arquivos do pacote transitivo `lightningcss@1.33.0` usado pelo Vite. A inspeção com `sample`, `lsof` e `ls -lO` identificou o binário nativo marcado `dataless` pelo iCloud e, depois, uma leitura bloqueada de `node/composeVisitors.js`. Os arquivos foram restaurados dos pacotes npm da mesma versão, por substituição atômica, e os processos antigos encerrados. Não houve alteração no lockfile, nas versões ou nas otimizações do build.
 
 Para evitar recorrência neste Mac, manter o checkout e suas dependências disponíveis localmente; preferir uma pasta de desenvolvimento fora da sincronização do iCloud. Em uma instalação nova, executar `npm ci` a partir do lockfile. Um processo sem saída não deve ser considerado erro de compilação sem inspecionar sua espera de I/O.
+
+### Modal Pro e paywall — 28/09/2026
+
+- Cinco testes automatizados aprovados: limites Free/Pro, segunda-feira local e virada do ano, dados inválidos, persistência e falhas de leitura/escrita.
+- TypeScript e build Vite aprovados.
+- Navegador: terceira câmera bloqueada; três salvamentos permitidos e quarto bloqueado, inclusive após excluir uma jogada; recarga preservou 3/3.
+- 1080p e remoção da marca abriram o modal com motivo e mantiveram 720p/com marca. Escape fechou a oferta. Ativação Pro e retorno ao Free funcionaram sem executar ação pendente.
+- CTA visível em desktop, 390×640 e altura reduzida 640×360; conteúdo rola separadamente do rodapé. Capturas: `screenshots/plans-desktop.png`, `screenshots/plans-mobile.png`.
+- Zoom nativo de 200%, leitor de tela e concorrência entre abas não foram validados. A persistência é demonstrativa e pode ser apagada pelo usuário.

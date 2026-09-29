@@ -39,3 +39,12 @@
 .direction-grid .direction-option{border-radius:8px}
 .direction-grid .direction-center{grid-column:2;grid-row:2}
 .direction-value{text-align:center;font-size:14px;font-weight:600;margin:8px 0 0;color:var(--ink)}
+
+.plans-overlay{position:fixed;inset:0;z-index:60;background:#17212bb3;display:grid;place-items:center;padding:12px}
+.plans-panel{width:min(100%,560px);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;background:var(--surface);color:var(--ink);border-radius:16px;overflow:hidden}
+.plans-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px 12px}.plans-header h2{font-size:24px}
+.plans-content{overflow:auto;min-height:0;padding:0 24px 20px}.plans-content p{line-height:1.5}.plans-reason{padding:12px;background:#edf2ff;border-radius:8px;margin-bottom:12px}
+.plans-price{margin:16px 0}.plans-price strong{font-size:32px}.plans-content table{width:100%;border-collapse:collapse;font-size:14px}.plans-content caption{text-align:left;margin-bottom:12px;color:var(--muted)}.plans-content th,.plans-content td{padding:12px 6px;border-bottom:1px solid var(--line);text-align:left}.plans-content tbody th{font-weight:500}.plans-note{font-size:13px;color:var(--muted);margin-top:16px}
+.plans-footer{flex-shrink:0;padding:16px 24px;border-top:1px solid var(--line);display:grid;gap:8px;background:var(--surface)}.plans-footer p{font-size:13px;color:var(--muted)}.plans-footer .primary-button{background:var(--action);color:#fff;width:100%;justify-content:center;white-space:normal}.plans-footer button,.plans-header button{min-height:48px}.plans-header button{min-width:48px}
+.export-options{display:grid;gap:12px;padding:16px;border:1px solid var(--line);border-radius:8px;margin-bottom:16px}.export-options label{display:flex;align-items:center;gap:12px;min-height:48px}.export-options select{min-height:48px;padding:8px;background:white;color:var(--ink);border:1px solid var(--line);border-radius:8px}.export-options p{font-size:13px;color:var(--muted)}
+@media(max-height:500px){.plans-header{padding:8px 16px}.plans-header h2{font-size:20px}.plans-footer{padding:8px 16px;gap:4px}.plans-footer button{padding:8px;min-height:48px}.plans-content{padding:0 16px 12px}}
