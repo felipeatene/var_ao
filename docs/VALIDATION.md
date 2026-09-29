@@ -121,3 +121,7 @@ Para evitar recorrência neste Mac, manter o checkout e suas dependências dispo
 - 1080p e remoção da marca abriram o modal com motivo e mantiveram 720p/com marca. Escape fechou a oferta. Ativação Pro e retorno ao Free funcionaram sem executar ação pendente.
 - CTA visível em desktop, 390×640 e altura reduzida 640×360; conteúdo rola separadamente do rodapé. Capturas: `screenshots/plans-desktop.png`, `screenshots/plans-mobile.png`.
 - Zoom nativo de 200%, leitor de tela e concorrência entre abas não foram validados. A persistência é demonstrativa e pode ser apagada pelo usuário.
+
+### Replay: enquadramentos independentes
+
+TypeScript e build aprovados. Revisão no navegador: câmera 1 ampliada e movida à esquerda; câmera 2 ampliada e movida para baixo; arraste na câmera 2 alterou somente sua imagem enquanto câmera 1 permaneceu estável. Comparação conferida em desktop e 390×844. Captura `screenshots/replay-independent-pan.png`. Arraste usa Pointer Events e captura do ponteiro; toque em aparelho físico permanece pendente.

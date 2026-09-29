@@ -45,3 +45,7 @@ O CTA “Assinar Plano Pro — R$ 9,00/mês” ativa apenas a simulação: não 
 Tentar exceder os limites, escolher 1080p ou remover a marca abre a oferta com o motivo, sem executar a ação. Fechar mantém Free; ativar Pro permite tentar novamente. A galeria exporta um resumo `.txt`; qualidade e marca são opções simuladas. Estas regras locais não constituem segurança comercial nem sincronizam entre dispositivos.
 
 Testes: `npm test`, `npm run lint` e `npm run build`.
+
+### Zoom e deslocamento do replay
+
+Cada câmera mantém zoom (1× a 3×) e deslocamento próprios, identificados pelo ID. Na comparação, tocar no vídeo, no rótulo ou no seletor escolhe a câmera controlada. Arraste e botões direcionais movem apenas essa imagem; reduzir a 1× centraliza e desabilita deslocamento. Redefinir afeta só a câmera selecionada. A reprodução temporal permanece sincronizada. Deslocamento limitado às bordas e coordenadas de marcação corrigidas pelo zoom.
