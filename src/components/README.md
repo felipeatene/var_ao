@@ -51,3 +51,7 @@ Testes: `npm test`, `npm run lint` e `npm run build`.
 Cada câmera mantém zoom (1× a 3×) e deslocamento próprios, identificados pelo ID. Na comparação, tocar no vídeo, no rótulo ou no seletor escolhe a câmera controlada. Arraste e botões direcionais movem apenas essa imagem; reduzir a 1× centraliza e desabilita deslocamento. Redefinir afeta só a câmera selecionada. A reprodução temporal permanece sincronizada. Deslocamento limitado às bordas e coordenadas de marcação corrigidas pelo zoom.
 
 O replay apresenta `customLabel` salvo, com fallback para `name` e por último a numeração da partida. O mesmo nome aparece no cabeçalho do vídeo, seletor, descrição acessível e controles de enquadramento. Nomes longos são abreviados visualmente nos botões, preservando o texto completo e o título.
+
+### Comparação A/B
+
+O replay mantém dois slots explícitos com IDs distintos. Os chips mostram número original, nome salvo e quadro ocupado. Clicar em câmera fora da tela substitui o quadro selecionado; clicar em uma câmera visível apenas seleciona seu quadro. Sair da comparação conserva o ângulo selecionado e memoriza o outro. Indisponibilidade troca somente slots inválidos; uma câmera retorna ao modo simples e nenhuma câmera produz estado vazio. Zoom permanece por ID, tempo é compartilhado e marcações são limpas ao substituir os vídeos. A faixa de chips rola horizontalmente, inclusive com foco por teclado.

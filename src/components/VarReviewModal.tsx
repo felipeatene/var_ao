@@ -1,3 +1,4 @@
+import { chooseCamera, reconcileSlots, toggleComparison, ReplaySlots } from '../utils/replaySlots';
 import React, { useState, useEffect, useRef } from 'react';
 import { CameraDevice, CameraPositionId, SportType, VarVerdict } from '../types';
 import { drawSimulatedAngleFootage, CAMERA_POSITIONS } from '../utils/mockFootage';
@@ -48,19 +49,23 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
   cameras,
   onVerdictDecided,
 }) => {
-  if (!isOpen) return null;
+
 
   // Active angle
   const activeCameras = cameras.filter((c) => c.positionId && c.status !== 'offline');
-  const [selectedCameraId, setSelectedCameraId] = useState(activeCameras[0]?.id ?? '');
+  const [slotState, setSlotState] = useState<ReplaySlots>({a:activeCameras[0]?.id??'',b:activeCameras[1]?.id??'',active:'a',split:false});
+  const slots = reconcileSlots(slotState,activeCameras.map(c=>c.id));
+  const selectedCameraId = slots.a;
+  const isSplitView = slots.split;
+  const focusedCameraId = slots.active === 'b' ? slots.b : slots.a;
+  const setFocusedCameraId = (id:string) => setSlotState({...slots,active:id===slots.b&&slots.split?'b':'a'});
   const selectedCamera = activeCameras.find(c => c.id === selectedCameraId) ?? activeCameras[0];
   const cameraName = (id: string) => {
     const camera = cameras.find(item => item.id === id);
     return camera?.customLabel?.trim() || camera?.name?.trim() || `Câmera ${Math.max(0, cameras.findIndex(item => item.id === id)) + 1}`;
   };
   const selectedPosId = selectedCamera?.positionId ?? 'pos_fundo_baixo';
-  const secondCamera = activeCameras.find(c => c.id !== selectedCamera?.id);
-  const [focusedCameraId, setFocusedCameraId] = useState(selectedCameraId);
+  const secondCamera = activeCameras.find(c => c.id === slots.b);
 
   // Playback state (0 to 40 seconds)
   const [currentTime, setCurrentTime] = useState<number>(38.5); // Default to near the crucial 38.5s spike moment
@@ -88,7 +93,14 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
   const [currentLineStart, setCurrentLineStart] = useState<{ x: number; y: number } | null>(null);
 
   // Split view toggle
-  const [isSplitView, setIsSplitView] = useState(false);
+  useEffect(() => {
+    setSlotState(previous => {
+      const next = reconcileSlots(previous,activeCameras.map(c=>c.id));
+      return JSON.stringify(next) === JSON.stringify(previous) ? previous : next;
+    });
+  }, [activeCameras.map(c=>c.id).join('|')]);
+  useEffect(() => { setAnnotations([]); setIsDrawing(false); setCurrentLineStart(null); panDrag.current=null; }, [slots.a, slots.b]);
+  useEffect(() => { if(!activeCameras.length)setIsPlaying(false); }, [activeCameras.length]);
 
   // Verdict state
   const [selectedVerdict, setSelectedVerdict] = useState<VarVerdict | null>(null);
@@ -259,7 +271,7 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
   };
 
   const cameraCanvas = (id:string, secondary = false) => <div className={`replay-angle ${viewId === id ? 'active' : ''}`}>
-    <button className="replay-angle-label" aria-pressed={viewId === id} onClick={()=>setFocusedCameraId(id)} title={cameraName(id)}><span>{cameraName(id)}</span><span> · {getView(id).zoom}×</span></button>
+    <button className="replay-angle-label" aria-pressed={viewId === id} onClick={()=>setFocusedCameraId(id)} title={cameraName(id)}><span>{isSplitView ? `${secondary?'B':'A'} · ` : ''}{cameraName(id)}</span><span> · {getView(id).zoom}×</span></button>
     <canvas ref={secondary ? splitCanvasRef : canvasRef} width={960} height={540}
       aria-label={`Imagem de ${cameraName(id)}. Amplie para arrastar ou use os botões de direção.`}
       style={{touchAction:getView(id).zoom > 1 || annotationMode !== 'none' ? 'none' : 'pan-y',cursor:getView(id).zoom>1?'grab':'default'}}
@@ -302,14 +314,18 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
     onVerdictDecided(verdict, `Decisão pelo VAR em ${currentTime.toFixed(2)}s`);
   };
 
+  if (!isOpen) return null;
   return <div className="replay-overlay"><section className="replay-panel">
     <header className="replay-header"><div><h2>Revisar lance</h2><p>Vídeo simulado · 40 segundos</p></div><button className="icon-button" aria-label="Fechar revisão" onClick={onClose}><X size={22}/></button></header>
     <div className="replay-content"><div className={`replay-video ${isSplitView?'split-video':''}`}>
       {selectedCamera && cameraCanvas(selectedCamera.id)}
       {isSplitView && secondCamera && cameraCanvas(secondCamera.id,true)}
     </div>
-    <div className="angle-selector" aria-label="Ângulo de revisão">{activeCameras.map((cam)=><button key={cam.id} aria-pressed={viewId===cam.id} onClick={()=>{if(!isSplitView){setSelectedCameraId(cam.id);setAnnotations([]);}setFocusedCameraId(cam.id);}} title={cameraName(cam.id)}>{cameraName(cam.id)}</button>)}</div>
-    <div className="replay-time"><span>{currentTime.toFixed(2)} <span>/ 40 s</span></span><button disabled={activeCameras.length<2} onClick={()=>{setIsSplitView(!isSplitView);setFocusedCameraId(selectedCameraId);}} aria-pressed={isSplitView}><Layers size={17}/>{isSplitView?'Um ângulo':'Comparar ângulos'}</button></div>
+    {!activeCameras.length && <p role="status">Nenhuma câmera disponível para revisão.</p>}
+    <fieldset className="replay-session-controls" disabled={!activeCameras.length}>
+    <p className="angle-instruction">{isSplitView ? `Escolha uma câmera para o quadro ${slots.active.toUpperCase()}` : "Escolha a câmera para revisar"}</p>
+    <div className="angle-selector" aria-label="Ângulo de revisão">{activeCameras.map((cam)=><button key={cam.id} aria-pressed={viewId===cam.id} onFocus={event=>event.currentTarget.scrollIntoView({block:'nearest',inline:'nearest'})} onClick={()=>setSlotState(chooseCamera(slots,cam.id))} title={cameraName(cam.id)}>{`Cam ${cameras.findIndex(c=>c.id===cam.id)+1} · ${cameraName(cam.id)}`}{isSplitView && (slots.a===cam.id||slots.b===cam.id) && <span className="slot-badge">{slots.a===cam.id?'A':'B'}</span>}</button>)}</div>
+    <div className="replay-time"><span>{currentTime.toFixed(2)} <span>/ 40 s</span></span><button disabled={activeCameras.length<2} onClick={()=>setSlotState(toggleComparison(slots,activeCameras.map(c=>c.id)))} aria-pressed={isSplitView}><Layers size={17}/>{isSplitView?'Um ângulo':'Comparar ângulos'}</button></div>
     <input className="replay-slider" type="range" min="0" max="40" step="0.0166" value={currentTime} aria-label="Posição no replay em segundos" onChange={e=>{setIsPlaying(false);setCurrentTime(+e.target.value);}}/>
     <div className="playback-controls"><label className="speed-control"><span className="sr-only">Velocidade</span><select value={speed} onChange={e=>setSpeed(+e.target.value)}>{[.1,.25,.5,1].map(v=><option key={v} value={v}>{String(v).replace('.',',')}×</option>)}</select></label><button aria-label="Voltar um quadro" onClick={()=>stepFrame(-1)}><ChevronLeft size={25}/></button><button className="play-button" aria-label={isPlaying?'Pausar':'Reproduzir'} onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying?<Pause size={30}/>:<Play size={30}/>}</button><button aria-label="Avançar um quadro" onClick={()=>stepFrame(1)}><ChevronRight size={25}/></button><button aria-label="Ampliar vídeo" disabled={view.zoom>=3} onClick={()=>updateView(viewId,v=>({...v,zoom:Math.min(3,v.zoom+.5)}))}><ZoomIn size={22}/><span>{view.zoom}×</span></button></div>
     <div className="replay-pan" role="group" aria-label="Enquadramento da câmera selecionada">
@@ -325,6 +341,7 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
       </div>
     </div>
     <details className="replay-tools"><summary>Marcações e decisão</summary><div className="drawing-tools"><button aria-pressed={annotationMode==='line'} onClick={()=>setAnnotationMode(annotationMode==='line'?'none':'line')}><PenTool size={17}/>Traçar linha</button><button aria-pressed={annotationMode==='touch'} onClick={()=>setAnnotationMode(annotationMode==='touch'?'none':'touch')}>Marcar toque</button><button onClick={()=>{setAnnotations([]);updateView(viewId,()=>({zoom:1,x:0,y:0}));}}><RotateCcw size={17}/>Limpar</button></div><p>As marcações são visuais e não detectam faltas automaticamente.</p><div className="verdict-options">{([{id:'IN',label:'Bola dentro'},{id:'OUT',label:'Bola fora'},{id:'TOUCH_BLOCK',label:'Toque no bloqueio'},{id:'TOUCH_NET',label:'Toque na rede'},{id:'INVASION',label:'Invasão'},{id:'CONFIRMED',label:'Confirmar ponto'}] as {id:VarVerdict,label:string}[]).map(v=><button key={v.id} aria-pressed={selectedVerdict===v.id} onClick={()=>handleConfirmVerdict(v.id)}>{v.label}</button>)}</div>{verdictConfirmed && <p role="status">Decisão registrada nesta demonstração.</p>}</details>
+    </fieldset>
     <button className="primary-button resume-button" onClick={onClose}>Retomar partida <ChevronRight size={20}/></button>
     </div>
   </section></div>;

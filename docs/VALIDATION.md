@@ -125,3 +125,9 @@ Para evitar recorrência neste Mac, manter o checkout e suas dependências dispo
 ### Replay: enquadramentos independentes
 
 TypeScript e build aprovados. Revisão no navegador: câmera 1 ampliada e movida à esquerda; câmera 2 ampliada e movida para baixo; arraste na câmera 2 alterou somente sua imagem enquanto câmera 1 permaneceu estável. Comparação conferida em desktop e 390×844. Captura `screenshots/replay-independent-pan.png`. Arraste usa Pointer Events e captura do ponteiro; toque em aparelho físico permanece pendente.
+
+### Comparação A/B — 29/09/2026
+
+Nove testes aprovados (cinco de planos e quatro de slots): 0/1/2/3/4/8 câmeras, substituição A/B, seleção sem duplicação, retorno ao modo simples, recuperação do outro ângulo e desconexão. TypeScript aprovado. Navegador com quatro câmeras: A recebeu câmera 3 e B câmera 4; ambas continuaram no instante 38,50 s. Enter no chip selecionou A mantendo zoom de B em 1,5× e A em 1×. Layout conferido lado a lado no desktop e empilhado no celular, com faixa horizontal. Capturas `screenshots/replay-slots-desktop.png` e `screenshots/replay-slots-mobile.png`. Validação física continua pendente.
+
+Build final aprovado: 1.671 módulos, 8,86 s, saída 0. Foi necessário restaurar arquivos locais de Lucide 0.546.0 e Lightning CSS 1.33.0; o binário Lightning CSS estava novamente marcado `dataless` pelo iCloud. Dependências e lockfile não foram alterados.
