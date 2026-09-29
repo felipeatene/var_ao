@@ -108,7 +108,7 @@ No Flutter, `SafeArea`, listas roláveis e largura máxima de 560 na abertura e 
 
 ## Elevation & Depth
 
-Predominam superfícies planas, separação tonal e linhas discretas. Sombras aparecem em feedback temporário e na ação fixa móvel web, registradas no sidecar. A barra superior Flutter remove a elevação ao rolar.
+Predominam superfícies planas, separação tonal e linhas discretas. Sombras aparecem em feedback temporário, na ação fixa móvel web e no painel contextual de câmera, registradas no sidecar. A barra superior Flutter remove a elevação ao rolar.
 
 **The Vídeo em Primeiro Plano Rule.** Reserve a superfície escura para captura e revisão; evite efeitos que disputem atenção com o lance.
 
@@ -118,11 +118,18 @@ Controles pequenos usam cantos suavizados; botões principais e campos de vídeo
 
 ## Components
 
+**The Camera Direction Rule.** A selected camera uses a compact circular wheel with eight arrows around a neutral center. The center may show `Atual` for an existing intermediate angle, while the camera marker preview follows the pending direction.
+
+**The Accessible Alternate Rule.** The accessibility control in the popover header switches to an eight-button 3×3 wind rose. Native buttons, `radiogroup` semantics, arrow-key navigation, and visible focus make the same choice available without relying on the circular gesture.
+
+**The Explicit Save Rule.** Name and direction are drafts until the primary `Salvar` action is enabled and pressed. Closing or switching cameras discards drafts; saving applies them, announces confirmation, closes the popover, and restores focus to the marker.
+
 - **Ações:** botão azul preenchido para criar partida ou revisar lance; contornado para entrar ou realizar ação secundária. Web: altura mínima de 56 px, reduzida a 54 px no breakpoint móvel; utilidades principais têm 48 px. Estado desabilitado reduz opacidade e impede a ação. Hover principal usa azul mais escuro; secundário recebe fundo azul suave.
 - **Campos:** rótulos permanentes, borda discreta, cantos de controle e altura mínima de 48 px nos ajustes web. Convite móvel aceita colagem em campo Material de múltiplas linhas. Erros devem explicar recuperação; no Flutter a mensagem é uma região semântica viva.
 - **Seleção de modalidade:** duas escolhas explícitas, Quadra e Praia. Na web, a escolha usa `aria-pressed`; no Flutter, `SegmentedButton`. Não representar seleção exclusivamente por cor.
 - **Navegação:** botões discretos e rótulos claros. Preservar controles de retorno e encerramento em estados intermediários.
 - **Câmeras e quadra:** câmera numerada, nome e estado textual. Marcadores web medem 48 px e permitem ajuste de posição; a ilustração Flutter orienta sem prometer calibração. A precisão de localização não foi validada.
+- **Configuração contextual de câmera (web):** tocar ou ativar um marcador abre um painel não modal ancorado a ele, com nome, controle circular de oito direções, alternativa em grade 3×3 e remoção. O painel usa superfície branca, raio de 12 px, sombra `0 8px 28px #17212b2b` e largura máxima de 312 px; mantém margem de 12 px no viewport, reposiciona acima ou abaixo e reserva espaço para a ação fixa de revisão. Campos têm altura mínima de 48 px e texto de 16 px. A seta externa indica a direção; ângulos existentes fora das oito opções aparecem como “Atual”. O foco inicial vai ao painel, sem abrir o teclado virtual. Escape, botão de fechar, interação externa ou saída de foco encerram a configuração; Escape e fechar devolvem o foco ao marcador. Arrastar a partir de 6 px move a câmera sem abrir o painel; setas do teclado também movem o marcador. Esses comportamentos estão implementados, com teclado físico e VoiceOver ainda pendentes de validação.
 - **Buffer:** mostrar disponibilidade e explicar lacunas. O bloco web é tonal; a sessão Flutter usa informação textual e ícone. O valor nominal de 40 segundos não representa continuidade garantida.
 - **Replay:** superfície escura, seletor de ângulo, linha do tempo e controles legíveis. Ferramentas secundárias ficam recolhidas no web. Disponibilidade de controles específicos deve seguir a implementação de cada plataforma, sem inferir paridade a partir destes estilos.
 
@@ -141,3 +148,5 @@ Verificações ainda necessárias: navegação completa por teclado, foco em di�
 - Don't usar a quadra como prova de calibração ou precisão.
 - Don't esconder lacunas ou tratar o buffer nominal como vídeo contínuo garantido.
 - Don't declarar auditoria de acessibilidade ou validação física ainda não realizadas.
+
+O seletor de direção usa setas SVG consistentes e alvos de 48 px. A posição circular deriva do mesmo ângulo usado na seta, eliminando discrepâncias entre orientação e posição visual. Um rótulo textual acompanha a seleção.

@@ -1,5 +1,6 @@
+import { createWeeklyUsage, requiresPro, UpgradeReason } from './utils/planLimits';
 import { DialogBoundary } from './components/DialogBoundary';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   CameraDevice,
   CameraPositionId,
@@ -125,7 +126,18 @@ export default function App() {
     },
   ]);
 
-  const [weeklySavedCount, setWeeklySavedCount] = useState<number>(2);
+  const usageStore = useRef(createWeeklyUsage(() => window.localStorage));
+  const [usage, setUsage] = useState(() => usageStore.current.read());
+  const weeklySavedCount = usage.count;
+  const saving = useRef(false);
+  const [upgradeReason, setUpgradeReason] = useState<UpgradeReason>();
+  const openUpgrade = (reason?: UpgradeReason) => { setUpgradeReason(reason); setIsUpgradeModalOpen(true); };
+  useEffect(() => {
+    const refresh = () => setUsage(usageStore.current.read());
+    window.addEventListener('focus', refresh); window.addEventListener('storage', refresh);
+    const timer = window.setInterval(refresh, 60000);
+    return () => { window.removeEventListener('focus', refresh); window.removeEventListener('storage', refresh); window.clearInterval(timer); };
+  }, []);
 
   // Modals state
   const [isVarModalOpen, setIsVarModalOpen] = useState(false);
@@ -146,8 +158,8 @@ export default function App() {
 
   // Add Camera at specific (x%, y%) coordinate
   const handleAddCameraAtPosition = (xPercent: number, yPercent: number, label: string) => {
-    if (tier === 'free' && cameras.length >= 2) {
-      setIsUpgradeModalOpen(true);
+    if (requiresPro(tier, 'camera_limit', cameras.length)) {
+      openUpgrade('camera_limit');
       return;
     }
 
@@ -191,6 +203,7 @@ export default function App() {
     setCameras((prev) =>
       prev.map((c) => (c.id === id ? { ...c, rotationDegrees } : c))
     );
+    showToast('Câmera salva.');
   };
 
   const handleUpdateCameraLabel = (id: string, label: string) => {
@@ -224,6 +237,7 @@ export default function App() {
 
   // Action: SALVAR LANCE (Highlight)
   const handleTriggerSaveHighlight = () => {
+    if (saving.current || isTransferringToMaster) return;
     const activeCount = cameras.filter((c) => c.positionId).length;
     if (activeCount === 0) {
       showToast('Erro: Nenhuma câmera conectada ao Jam!');
@@ -231,13 +245,16 @@ export default function App() {
     }
 
     // Check freemium limit (3 saves per week for free)
-    if (tier === 'free' && weeklySavedCount >= 3) {
-      setIsUpgradeModalOpen(true);
+    const currentUsage = usageStore.current.read();
+    setUsage(currentUsage);
+    if (requiresPro(tier, 'weekly_highlight_limit', currentUsage.count)) {
+      openUpgrade('weekly_highlight_limit');
       return;
     }
 
     setIsTransferringToMaster(true);
-    showToast(`Lance Salvo! Exportando 40s para a pasta "VAR-ÃO - Jogadas"...`);
+    saving.current = true;
+    showToast('Salvando jogada de demonstração…');
 
     setTimeout(() => {
       setIsTransferringToMaster(false);
@@ -256,7 +273,8 @@ export default function App() {
       };
 
       setHighlights((prev) => [newHighlight, ...prev]);
-      setWeeklySavedCount((prev) => prev + 1);
+      setUsage(usageStore.current.increment());
+      saving.current = false;
 
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) confetti({
         particleCount: 70,
@@ -291,14 +309,14 @@ export default function App() {
           <div className="home-story"><h1>Todo lance<br/>merece outro<br/><span>ângulo.</span></h1><p className="intro">O jogo segue.<br/>A dúvida fica para o replay.</p><div className="home-court"><img src="/assets/court.png" alt="Ilustração de uma quadra de vôlei com a rede ao centro"/></div></div>
           <div className="start-panel"><div className="start-copy"><h2>Reveja o jogo<br/>com dois celulares.</h2><p>Uma partida. Dois pontos de vista. <br/>Escolha a modalidade para começar.</p></div><fieldset className="sport-picker"><legend>Modalidade</legend><div className="segmented"><button aria-pressed={sport === 'court_volleyball'} onClick={() => setSport('court_volleyball')}>Quadra</button><button aria-pressed={sport === 'beach_volleyball'} onClick={() => setSport('beach_volleyball')}>Praia</button></div></fieldset><div className="start-actions"><button className="primary-button" onClick={() => setActiveScreen('master')}>Criar partida <ArrowUpRight size={22}/></button><button className="secondary-button" onClick={() => setActiveScreen('camera_setup')}>Entrar como câmera <Camera size={20}/></button></div><p className="connection-note"><Wifi size={17}/>No aplicativo: mesma rede, sem internet.</p><div className="small-print"><span>Uma nova visão do seu jogo.</span><button onClick={() => setIsRoadmapModalOpen(true)}>Conheça o projeto <ArrowUpRight size={14}/></button></div></div>
         </section>}
-        {activeScreen === 'master' && <section className="match-layout"><div className="match-title"><button className="back-link" onClick={() => setActiveScreen('home')}><ArrowLeft size={18}/> Voltar</button><h1>Partida pronta.</h1><p>{sport === 'court_volleyball' ? 'Vôlei de quadra' : 'Vôlei de praia'} · sessão demonstrativa</p></div><div className="court-panel legacy-light"><CourtLayout sport={sport} cameras={cameras} onAddCameraAtPosition={handleAddCameraAtPosition} onUpdateCameraPosition={handleUpdateCameraPosition} onUpdateCameraRotation={handleUpdateCameraRotation} onUpdateCameraLabel={handleUpdateCameraLabel} onRemoveCamera={handleRemoveCamera} isPro={tier === 'pro'} onOpenUpgradeModal={() => setIsUpgradeModalOpen(true)}/></div><aside className="match-controls"><h2>Seus pontos de vista</h2><div className="camera-list">{cameras.map((camera,i)=><div className="camera-row" key={camera.id}><span className="camera-number">{i+1}</span><div><strong>{i===0?'Este celular':camera.customLabel || camera.name}</strong><span>{camera.status==='offline'?'Desconectada':'Câmera simulada'}</span></div><span className="recording-state"><span className="status-dot"/>{camera.status==='offline'?'Offline':'Pronta'}</span></div>)}</div><div className="buffer-status"><Clock3 size={23}/><div><strong>40 s para rever o lance</strong><span>Vídeo de demonstração</span></div></div><button className="primary-button" disabled={!cameras.length || isTransferringToMaster} onClick={handleTriggerVar}>{isTransferringToMaster?'Preparando replay…':'Revisar lance'}<Play size={20}/></button><button className="secondary-button" disabled={!cameras.length || isTransferringToMaster} onClick={handleTriggerSaveHighlight}>Salvar jogada <Film size={19}/></button><div className="match-utilities"><button className="quiet-button" onClick={() => setActiveScreen('camera_setup')}><Camera size={18}/> Usar webcam</button><button className="quiet-button" onClick={() => setIsUpgradeModalOpen(true)}>Plano {tier === 'pro'?'Pro':'Free'}</button></div><button className="end-session" onClick={() => setActiveScreen('home')}>Encerrar demonstração</button></aside></section>}
+        {activeScreen === 'master' && <section className="match-layout"><div className="match-title"><button className="back-link" onClick={() => setActiveScreen('home')}><ArrowLeft size={18}/> Voltar</button><h1>Partida pronta.</h1><p>{sport === 'court_volleyball' ? 'Vôlei de quadra' : 'Vôlei de praia'} · sessão demonstrativa</p></div><div className="court-panel legacy-light"><CourtLayout sport={sport} cameras={cameras} onAddCameraAtPosition={handleAddCameraAtPosition} onUpdateCameraPosition={handleUpdateCameraPosition} onUpdateCameraRotation={handleUpdateCameraRotation} onUpdateCameraLabel={handleUpdateCameraLabel} onRemoveCamera={handleRemoveCamera} isPro={tier === 'pro'} onOpenUpgradeModal={() => openUpgrade('camera_limit')}/></div><aside className="match-controls"><h2>Seus pontos de vista</h2>{!usage.persistent && <p role="status">A contagem semanal não será preservada após recarregar este navegador.</p>}<div className="camera-list">{cameras.map((camera,i)=><div className="camera-row" key={camera.id}><span className="camera-number">{i+1}</span><div><strong>{i===0?'Este celular':camera.customLabel || camera.name}</strong><span>{camera.status==='offline'?'Desconectada':'Câmera simulada'}</span></div><span className="recording-state"><span className="status-dot"/>{camera.status==='offline'?'Offline':'Pronta'}</span></div>)}</div><div className="buffer-status"><Clock3 size={23}/><div><strong>40 s para rever o lance</strong><span>Vídeo de demonstração</span></div></div><button className="primary-button" disabled={!cameras.length || isTransferringToMaster} onClick={handleTriggerVar}>{isTransferringToMaster?'Preparando replay…':'Revisar lance'}<Play size={20}/></button><button className="secondary-button" disabled={!cameras.length || isTransferringToMaster} onClick={handleTriggerSaveHighlight}>Salvar jogada <Film size={19}/></button><div className="match-utilities"><button className="quiet-button" onClick={() => setActiveScreen('camera_setup')}><Camera size={18}/> Usar webcam</button><button className="quiet-button" onClick={() => openUpgrade()}>Plano {tier === 'pro'?'Pro':'Free'}</button></div><button className="end-session" onClick={() => setActiveScreen('home')}>Encerrar demonstração</button></aside></section>}
         {activeScreen === 'camera_setup' && <section className="setup-layout"><button className="back-link" onClick={() => setActiveScreen('home')}><ArrowLeft size={18}/>Voltar</button><h1>De onde vamos<br/>ver o jogo?</h1><p>Escolha a posição deste celular. A webcam é local; esta versão web não conecta outros aparelhos.</p><div className="position-list">{[{id:'pos_fundo_baixo' as CameraPositionId,title:'Linha de fundo',desc:'Atrás da linha de saque do seu lado'},{id:'pos_fundo_cima' as CameraPositionId,title:'Fundo adversário',desc:'Uma visão do outro lado da quadra'},{id:'pos_rede_esq' as CameraPositionId,title:'Rede, à esquerda',desc:'Para rever bloqueios e toques na rede'},{id:'pos_rede_dir' as CameraPositionId,title:'Rede, à direita',desc:'Outro ponto de vista dos bloqueios'},{id:'pos_lateral' as CameraPositionId,title:'Lateral da quadra',desc:'Uma visão ampla de toda a jogada'}].map((item,i)=><button key={item.id} onClick={() => handleStartCameraRole(item.id)}><span className="camera-number">{i+1}</span><span><strong>{item.title}</strong><small>{item.desc}</small></span><ChevronRight size={20}/></button>)}</div></section>}
         {activeScreen === 'camera_recording' && <div className="recording-screen"><CameraView positionId={cameraPositionChoice} sport={sport} onExit={() => setActiveScreen('home')} isTriggered={isTransferringToMaster} onSelectPosition={setCameraPositionChoice}/></div>}
       </main>
       <footer className="app-footer"><span>Outro Ângulo</span><span>Feito para quem está em quadra.</span><button onClick={() => setIsRoadmapModalOpen(true)}>Sobre a demonstração</button></footer>
       {isVarModalOpen && <DialogBoundary label="Revisar lance" onClose={() => setIsVarModalOpen(false)}><VarReviewModal isOpen onClose={() => setIsVarModalOpen(false)} sport={sport} cameras={cameras} onVerdictDecided={handleVerdictDecided}/></DialogBoundary>}
-      {isGalleryOpen && <DialogBoundary label="Jogadas salvas" onClose={() => setIsGalleryOpen(false)}><div className="legacy-light"><HighlightsGalleryModal isOpen onClose={() => setIsGalleryOpen(false)} highlights={highlights} onDeleteHighlight={(id) => setHighlights(prev => prev.filter(h => h.id!==id))} weeklySavedCount={weeklySavedCount} tier={tier} onOpenUpgradeModal={() => setIsUpgradeModalOpen(true)}/></div></DialogBoundary>}
-      {isUpgradeModalOpen && <DialogBoundary label="Planos demonstrativos" onClose={() => setIsUpgradeModalOpen(false)}><div className="legacy-light"><ProUpgradeModal isOpen onClose={() => setIsUpgradeModalOpen(false)} tier={tier} onToggleTier={(value)=>{setTier(value);showToast('Plano alterado apenas nesta demonstração.');}}/></div></DialogBoundary>}
+      {isGalleryOpen && <DialogBoundary label="Jogadas salvas" onClose={() => setIsGalleryOpen(false)}><div className="legacy-light"><HighlightsGalleryModal isOpen onClose={() => setIsGalleryOpen(false)} highlights={highlights} onDeleteHighlight={(id) => setHighlights(prev => prev.filter(h => h.id!==id))} weeklySavedCount={weeklySavedCount} usagePersistent={usage.persistent} tier={tier} onOpenUpgradeModal={openUpgrade}/></div></DialogBoundary>}
+      {isUpgradeModalOpen && <DialogBoundary label="Planos demonstrativos" onClose={() => setIsUpgradeModalOpen(false)}><div className="legacy-light"><ProUpgradeModal isOpen reason={upgradeReason} onClose={() => setIsUpgradeModalOpen(false)} tier={tier} onToggleTier={(value)=>{setTier(value);showToast('Plano alterado apenas nesta demonstração.');}}/></div></DialogBoundary>}
       {isRoadmapModalOpen && <DialogBoundary label="Sobre o protótipo" onClose={() => setIsRoadmapModalOpen(false)}><div className="legacy-light"><GithubRoadmapModal isOpen onClose={() => setIsRoadmapModalOpen(false)}/></div></DialogBoundary>}
     </div>
   );

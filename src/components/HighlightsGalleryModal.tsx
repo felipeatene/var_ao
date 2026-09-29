@@ -1,3 +1,4 @@
+import { FREE_LIMITS, requiresPro, UpgradeReason } from '../utils/planLimits';
 import React, { useState } from 'react';
 import { SavedHighlight, SubscriptionTier } from '../types';
 import {
@@ -21,7 +22,8 @@ interface HighlightsGalleryModalProps {
   onDeleteHighlight: (id: string) => void;
   weeklySavedCount: number;
   tier: SubscriptionTier;
-  onOpenUpgradeModal: () => void;
+  onOpenUpgradeModal: (reason?: UpgradeReason) => void;
+  usagePersistent: boolean;
 }
 
 export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
@@ -30,26 +32,32 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
   highlights,
   onDeleteHighlight,
   weeklySavedCount,
+  usagePersistent,
   tier,
   onOpenUpgradeModal,
 }) => {
-  if (!isOpen) return null;
+
 
   const [activeHighlight, setActiveHighlight] = useState<SavedHighlight | null>(
     highlights[0] || null
   );
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
 
+  const [resolution, setResolution] = useState<'720p' | '1080p'>('720p');
+  const [watermark, setWatermark] = useState(true);
+  if (!isOpen) return null;
   const isPro = tier === 'pro';
-  const weeklyLimit = 3;
+  const weeklyLimit = FREE_LIMITS.weeklyHighlights;
   const savesLeft = Math.max(0, weeklyLimit - weeklySavedCount);
 
   const handleDownload = (item: SavedHighlight) => {
-    // Generate simulated download file
+    if (resolution === '1080p' && requiresPro(tier, 'export_1080p')) { onOpenUpgradeModal('export_1080p'); return; }
+    if (!watermark && requiresPro(tier, 'remove_watermark')) { onOpenUpgradeModal('remove_watermark'); return; }
+    // Export a demonstrative text summary, never a video.
     const element = document.createElement('a');
     const file = new Blob(
       [
-        `=== Outro Ângulo JOGADA EXPORTADA ===\nTítulo: ${item.title}\nData: ${item.timestamp}\nDuração: ${item.duration}s\nCâmeras Sincronizadas: ${item.camerasCount}\nResolução: ${item.resolution}\nMarca d'água: ${item.hasWatermark ? 'Ativa (Plano Free)' : 'Sem marca (Plano Pro)'}`,
+        `=== Outro Ângulo JOGADA EXPORTADA ===\nTítulo: ${item.title}\nData: ${item.timestamp}\nDuração: ${item.duration}s\nCâmeras Sincronizadas: ${item.camerasCount}\nResolução: ${resolution}\nMarca d'água: ${watermark ? 'Ativa (Plano Free)' : 'Sem marca (Plano Pro)'}`,
       ],
       { type: 'text/plain' }
     );
@@ -106,7 +114,7 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
 
           {!isPro ? (
             <button
-              onClick={onOpenUpgradeModal}
+              onClick={() => onOpenUpgradeModal()}
               className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 font-medium transition-all"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -121,6 +129,12 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
 
         {/* Clips Content Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 flex flex-col gap-4">
+          <fieldset className="export-options"><legend>Opções de exportação simulada</legend>
+            <label>Qualidade<select value={resolution} onChange={event => { const value = event.target.value as '720p' | '1080p'; if (value === '1080p' && requiresPro(tier,'export_1080p')) { onOpenUpgradeModal('export_1080p'); return; } setResolution(value); }}><option value="720p">720p</option><option value="1080p">1080p · Pro</option></select></label>
+            <label><input type="checkbox" checked={watermark} onChange={event => { if (!event.target.checked && requiresPro(tier,'remove_watermark')) { onOpenUpgradeModal('remove_watermark'); return; } setWatermark(event.target.checked); }}/>Incluir marca d’água</label>
+            <p>Gera apenas um resumo em texto. Estas opções não processam vídeo.</p>
+            {!usagePersistent && <p role="status">A cota não será preservada após recarregar.</p>}
+          </fieldset>
           {highlights.length === 0 ? (
             <div className="py-16 text-center flex flex-col items-center justify-center">
               <Film className="w-12 h-12 text-gray-600 mb-3" />
@@ -216,7 +230,7 @@ export const HighlightsGalleryModal: React.FC<HighlightsGalleryModalProps> = ({
                         ) : (
                           <>
                             <Download className="w-3.5 h-3.5" />
-                            <span>Exportar MP4</span>
+                            <span>Exportar resumo (.txt)</span>
                           </>
                         )}
                       </button>

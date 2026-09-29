@@ -88,3 +88,46 @@ Verificar VoiceOver e TalkBack, ordem de leitura, nomes dos controles, foco de d
 ## Resultado para revisão
 
 O código e a documentação podem ser revisados via pull request. A validação física e a revisão nativa de acessibilidade continuam abertas e não devem ser marcadas como concluídas no merge ou na descrição do produto.
+
+## Atualização · pop-up de câmera
+
+O painel abaixo da quadra foi substituído por configuração ancorada ao marcador. Verificações no navegador: oito direções e rotação correspondente, preservação do ângulo inicial de 145°, edição do nome, arraste sem abertura, Escape com retorno do foco, troca de câmera, fechamento externo e remoção com foco na câmera restante. Geometria conferida em 390 × 844, 1280 × 900 e área reduzida de 320 × 480; o pop-up permanece dentro da área visível e não sobrepõe a ação fixa de revisão. Ampliação visual de 200% foi exercitada via emulação do navegador; isso não equivale a teste de ampliação de texto do sistema.
+
+Capturas: [celular](screenshots/camera-popup-mobile.png), [desktop](screenshots/camera-popup-desktop.png) e [ampliação](screenshots/camera-popup-zoom.png). O teclado virtual físico e leitores de tela não foram validados nesta atualização.
+
+Nesta atualização, `npm run lint` e `npm run build` passaram no checkout local (1.669 módulos; JavaScript de 293,16 kB, 91,61 kB gzip). A implementação Flutter não foi alterada.
+
+## Atualização · controle circular e salvar
+
+O pop-up agora inicia com controle circular, alterna para a rosa dos ventos acessível, mantém nome e direção em rascunho e só aplica mudanças ao pressionar **Salvar**. A validação manual cobriu estado inicial desabilitado, alteração de nome, alteração das oito direções, retorno ao valor original, salvar/fechar com foco no marcador, descarte por Escape e clique externo, além da mensagem “Câmera salva.”. Os testes foram realizados no navegador local em viewport móvel e desktop. VoiceOver, TalkBack e teclado virtual físico continuam pendentes.
+
+### Correção do alinhamento das direções
+
+Removidas regras CSS conflitantes e setas tipográficas. Verificação visual no navegador em viewport móvel: oito opções separadas e alinhadas no círculo e na grade 3×3; seleção Cima → tecla direita seleciona Cima-direita e habilita Salvar. TypeScript aprovado. Leitor de tela físico permanece pendente.
+
+### Build Vite recuperado — 28/09/2026
+
+`npm run build` executado com código de saída 0 no próprio checkout: 1.669 módulos, 224 ms; gerados `dist/index.html`, CSS (47,09 kB) e JavaScript (295,87 kB).
+
+O processo estava bloqueado em operações de leitura/carregamento de arquivos do pacote transitivo `lightningcss@1.33.0` usado pelo Vite. A inspeção com `sample`, `lsof` e `ls -lO` identificou o binário nativo marcado `dataless` pelo iCloud e, depois, uma leitura bloqueada de `node/composeVisitors.js`. Os arquivos foram restaurados dos pacotes npm da mesma versão, por substituição atômica, e os processos antigos encerrados. Não houve alteração no lockfile, nas versões ou nas otimizações do build.
+
+Para evitar recorrência neste Mac, manter o checkout e suas dependências disponíveis localmente; preferir uma pasta de desenvolvimento fora da sincronização do iCloud. Em uma instalação nova, executar `npm ci` a partir do lockfile. Um processo sem saída não deve ser considerado erro de compilação sem inspecionar sua espera de I/O.
+
+### Modal Pro e paywall — 28/09/2026
+
+- Cinco testes automatizados aprovados: limites Free/Pro, segunda-feira local e virada do ano, dados inválidos, persistência e falhas de leitura/escrita.
+- TypeScript e build Vite aprovados.
+- Navegador: terceira câmera bloqueada; três salvamentos permitidos e quarto bloqueado, inclusive após excluir uma jogada; recarga preservou 3/3.
+- 1080p e remoção da marca abriram o modal com motivo e mantiveram 720p/com marca. Escape fechou a oferta. Ativação Pro e retorno ao Free funcionaram sem executar ação pendente.
+- CTA visível em desktop, 390×640 e altura reduzida 640×360; conteúdo rola separadamente do rodapé. Capturas: `screenshots/plans-desktop.png`, `screenshots/plans-mobile.png`.
+- Zoom nativo de 200%, leitor de tela e concorrência entre abas não foram validados. A persistência é demonstrativa e pode ser apagada pelo usuário.
+
+### Replay: enquadramentos independentes
+
+TypeScript e build aprovados. Revisão no navegador: câmera 1 ampliada e movida à esquerda; câmera 2 ampliada e movida para baixo; arraste na câmera 2 alterou somente sua imagem enquanto câmera 1 permaneceu estável. Comparação conferida em desktop e 390×844. Captura `screenshots/replay-independent-pan.png`. Arraste usa Pointer Events e captura do ponteiro; toque em aparelho físico permanece pendente.
+
+### Comparação A/B — 29/09/2026
+
+Nove testes aprovados (cinco de planos e quatro de slots): 0/1/2/3/4/8 câmeras, substituição A/B, seleção sem duplicação, retorno ao modo simples, recuperação do outro ângulo e desconexão. TypeScript aprovado. Navegador com quatro câmeras: A recebeu câmera 3 e B câmera 4; ambas continuaram no instante 38,50 s. Enter no chip selecionou A mantendo zoom de B em 1,5× e A em 1×. Layout conferido lado a lado no desktop e empilhado no celular, com faixa horizontal. Capturas `screenshots/replay-slots-desktop.png` e `screenshots/replay-slots-mobile.png`. Validação física continua pendente.
+
+Build final aprovado: 1.671 módulos, 8,86 s, saída 0. Foi necessário restaurar arquivos locais de Lucide 0.546.0 e Lightning CSS 1.33.0; o binário Lightning CSS estava novamente marcado `dataless` pelo iCloud. Dependências e lockfile não foram alterados.
