@@ -3,8 +3,12 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+// GitHub Pages serves this project site under /var_ao/; dev server stays at /.
+const PAGES_BASE = '/var_ao/';
+
+export default defineConfig(({command, isPreview}) => {
   return {
+    base: command === 'build' || isPreview ? PAGES_BASE : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

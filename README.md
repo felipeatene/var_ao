@@ -106,7 +106,8 @@ O repositório possui workflows em `.github/workflows` para validar e publicar o
   - Web: `npm ci`, `npm run lint`, `npm run build`
   - Mobile: `./scripts/mobile.sh pub get`, `./scripts/mobile.sh analyze`, `./scripts/mobile.sh test --no-pub`
 - `CI` também publica o artefato `web-dist` (pasta `dist/`) como ambiente de teste para validação do build gerado em cada execução.
-- `Deploy Web` roda no `push` da branch `main` (e manualmente) para publicar `dist/` no GitHub Pages.
+- `Deploy Web` roda no `push` da branch `main` (e manualmente) para publicar `dist/` no GitHub Pages. Ele valida que `dist/index.html` usa os assets compilados em `/var_ao/assets/` (e não `/src/main.tsx`) antes de publicar. Em *Settings → Pages*, a fonte deve ser **GitHub Actions**.
+- O build de produção usa `base: '/var_ao/'` (`vite.config.ts`), pois o site é publicado em `https://felipeatene.github.io/var_ao/`; o `npm run dev` continua servindo em `/`.
 
 O antigo `bun.lock` foi substituído pelo lockfile npm. Dependências sem uso foram removidas, incluindo a dependência direta de esbuild que conflitava com o Vite 8.
 
