@@ -49,3 +49,5 @@ Testes: `npm test`, `npm run lint` e `npm run build`.
 ### Zoom e deslocamento do replay
 
 Cada câmera mantém zoom (1× a 3×) e deslocamento próprios, identificados pelo ID. Na comparação, tocar no vídeo, no rótulo ou no seletor escolhe a câmera controlada. Arraste e botões direcionais movem apenas essa imagem; reduzir a 1× centraliza e desabilita deslocamento. Redefinir afeta só a câmera selecionada. A reprodução temporal permanece sincronizada. Deslocamento limitado às bordas e coordenadas de marcação corrigidas pelo zoom.
+
+O replay apresenta `customLabel` salvo, com fallback para `name` e por último a numeração da partida. O mesmo nome aparece no cabeçalho do vídeo, seletor, descrição acessível e controles de enquadramento. Nomes longos são abreviados visualmente nos botões, preservando o texto completo e o título.

@@ -54,6 +54,10 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
   const activeCameras = cameras.filter((c) => c.positionId && c.status !== 'offline');
   const [selectedCameraId, setSelectedCameraId] = useState(activeCameras[0]?.id ?? '');
   const selectedCamera = activeCameras.find(c => c.id === selectedCameraId) ?? activeCameras[0];
+  const cameraName = (id: string) => {
+    const camera = cameras.find(item => item.id === id);
+    return camera?.customLabel?.trim() || camera?.name?.trim() || `Câmera ${Math.max(0, cameras.findIndex(item => item.id === id)) + 1}`;
+  };
   const selectedPosId = selectedCamera?.positionId ?? 'pos_fundo_baixo';
   const secondCamera = activeCameras.find(c => c.id !== selectedCamera?.id);
   const [focusedCameraId, setFocusedCameraId] = useState(selectedCameraId);
@@ -255,9 +259,9 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
   };
 
   const cameraCanvas = (id:string, secondary = false) => <div className={`replay-angle ${viewId === id ? 'active' : ''}`}>
-    <button className="replay-angle-label" aria-pressed={viewId === id} onClick={()=>setFocusedCameraId(id)}>Câmera {activeCameras.findIndex(c=>c.id===id)+1} · {getView(id).zoom}×</button>
+    <button className="replay-angle-label" aria-pressed={viewId === id} onClick={()=>setFocusedCameraId(id)} title={cameraName(id)}><span>{cameraName(id)}</span><span> · {getView(id).zoom}×</span></button>
     <canvas ref={secondary ? splitCanvasRef : canvasRef} width={960} height={540}
-      aria-label={`Imagem da câmera ${activeCameras.findIndex(c=>c.id===id)+1}. Amplie para arrastar ou use os botões de direção.`}
+      aria-label={`Imagem de ${cameraName(id)}. Amplie para arrastar ou use os botões de direção.`}
       style={{touchAction:getView(id).zoom > 1 || annotationMode !== 'none' ? 'none' : 'pan-y',cursor:getView(id).zoom>1?'grab':'default'}}
       onPointerDown={event=>{
         setFocusedCameraId(id);
@@ -304,12 +308,12 @@ export const VarReviewModal: React.FC<VarReviewModalProps> = ({
       {selectedCamera && cameraCanvas(selectedCamera.id)}
       {isSplitView && secondCamera && cameraCanvas(secondCamera.id,true)}
     </div>
-    <div className="angle-selector" aria-label="Ângulo de revisão">{activeCameras.map((cam,i)=><button key={cam.id} aria-pressed={viewId===cam.id} onClick={()=>{if(!isSplitView){setSelectedCameraId(cam.id);setAnnotations([]);}setFocusedCameraId(cam.id);}}>Câmera {i+1}</button>)}</div>
+    <div className="angle-selector" aria-label="Ângulo de revisão">{activeCameras.map((cam)=><button key={cam.id} aria-pressed={viewId===cam.id} onClick={()=>{if(!isSplitView){setSelectedCameraId(cam.id);setAnnotations([]);}setFocusedCameraId(cam.id);}} title={cameraName(cam.id)}>{cameraName(cam.id)}</button>)}</div>
     <div className="replay-time"><span>{currentTime.toFixed(2)} <span>/ 40 s</span></span><button disabled={activeCameras.length<2} onClick={()=>{setIsSplitView(!isSplitView);setFocusedCameraId(selectedCameraId);}} aria-pressed={isSplitView}><Layers size={17}/>{isSplitView?'Um ângulo':'Comparar ângulos'}</button></div>
     <input className="replay-slider" type="range" min="0" max="40" step="0.0166" value={currentTime} aria-label="Posição no replay em segundos" onChange={e=>{setIsPlaying(false);setCurrentTime(+e.target.value);}}/>
     <div className="playback-controls"><label className="speed-control"><span className="sr-only">Velocidade</span><select value={speed} onChange={e=>setSpeed(+e.target.value)}>{[.1,.25,.5,1].map(v=><option key={v} value={v}>{String(v).replace('.',',')}×</option>)}</select></label><button aria-label="Voltar um quadro" onClick={()=>stepFrame(-1)}><ChevronLeft size={25}/></button><button className="play-button" aria-label={isPlaying?'Pausar':'Reproduzir'} onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying?<Pause size={30}/>:<Play size={30}/>}</button><button aria-label="Avançar um quadro" onClick={()=>stepFrame(1)}><ChevronRight size={25}/></button><button aria-label="Ampliar vídeo" disabled={view.zoom>=3} onClick={()=>updateView(viewId,v=>({...v,zoom:Math.min(3,v.zoom+.5)}))}><ZoomIn size={22}/><span>{view.zoom}×</span></button></div>
     <div className="replay-pan" role="group" aria-label="Enquadramento da câmera selecionada">
-      <p>Enquadramento · Câmera {activeCameras.findIndex(c=>c.id===viewId)+1}</p>
+      <p>Enquadramento · {cameraName(viewId)}</p>
       <span>Amplie e arraste a imagem ou use as setas. Apenas esta câmera se move.</span>
       <div className="replay-pan-buttons">
         <button aria-label="Reduzir vídeo" disabled={view.zoom<=1} onClick={()=>updateView(viewId,v=>({...v,zoom:Math.max(1,v.zoom-.5)}))}><ZoomOut size={20}/></button>
